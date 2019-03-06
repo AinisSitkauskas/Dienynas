@@ -22,7 +22,7 @@ class MarksGenerator {
 
 }
 
-include("connection2.php");
+include("connection.php");
 $n = $argv[1];
 $studentFirstNames = array("Jonas Dvivardis", "Petras", "Antanas", "Tomas", "Juozas", "Jurgis", "Mantas", "Danielius", "Stasys", "Algis");
 $studentLastNames = array("Kazlauskas", "Jonaitis", "Petraitis", "Minderis", "Ignatavičius", "Kavaliauskas", "Sabonis", "Savickas", "Kesminas", "Adamkus");
