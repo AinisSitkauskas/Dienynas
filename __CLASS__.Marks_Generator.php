@@ -1,17 +1,13 @@
 <?php
-define("TIMESTAMP_YEAR_2000", "946684800");
-define("TIMESTAMP_YEAR_2019", "1546300800");
-
 class MarksGenerator {
+
+    const TIMESTAMP_YEAR_2000 = "946684800";
+    const TIMESTAMP_YEAR_2019 = "1546300800";
 
     private $connection;
 
-    function __construct() {
-        include("parameters.php");
-        $this->connection = new mysqli($serverName, $userName, $password, $dbName);
-        if ($this->connection->connect_error) {
-            echo "Prisijungti nepavyko: " . mysqli_connect_error();
-        }
+    function __construct($connection) {
+        $this->connection = $connection;
     }
 
     private function generateStudents($numberOfRows) {
@@ -52,7 +48,7 @@ class MarksGenerator {
     private function generateMarks($numberOfRows) {
         $sqlQueryMarks = "INSERT INTO marks (idStudent, idSubject, mark, date) VALUES ";
         for ($i = 0; $i < $numberOfRows; $i++) {
-            $dateTimestamp = rand(TIMESTAMP_YEAR_2000, TIMESTAMP_YEAR_2019);
+            $dateTimestamp = rand(self::TIMESTAMP_YEAR_2000, self::TIMESTAMP_YEAR_2019);
             $mark = rand(1, 10);
             $date = date("Y-m-d", $dateTimestamp);
             $numberOfStudent = $i % 100 + 1;
@@ -77,10 +73,6 @@ class MarksGenerator {
         if ($k > 0) {
             $this->generateMarks($k);
         }
-    }
-
-    function __destruct() {
-        $this->connection->close();
     }
 
 }
