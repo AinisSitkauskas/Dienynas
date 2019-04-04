@@ -15,13 +15,8 @@
     </head>
     <body>
         <h1> Sveiki, atvykę !  </h1>
-        <form  method = "post" action="..\controlers\login.php" >
+        <form  method = "post" action="index.php?controller=login&action=logout" >
             <input type="submit" name="logout"  value="Atsijungti">
         </form>
-        <?php
-        if (!isset($_COOKIE['login'])) {
-            header("Location: ../views/dienynas_login.php");
-        }
-        ?>
     </body>
 </html>

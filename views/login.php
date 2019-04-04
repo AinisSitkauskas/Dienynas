@@ -16,7 +16,7 @@
     <body>
 
         <h1>Dienynas </h1><br>
-        <form  method = "post" action="..\controlers\login.php" >
+        <form  method = "post" action="index.php?controller=login&action=login" >
             Vartotojo vardas:<br>
             <input type="text" name="userName">
             <br>
