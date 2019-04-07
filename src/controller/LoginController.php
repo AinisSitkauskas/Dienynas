@@ -2,6 +2,8 @@
 
 class LoginController {
 
+    const COOKIE_EXPIRE_TIME = 3600;
+
     private $connection;
 
     function __construct($connection) {
@@ -9,26 +11,31 @@ class LoginController {
     }
 
     public function loginAction() {
-        if (isset($_POST['userName']) && isset($_POST['password'])) {
+
+        if (empty($_POST['userName']) && empty($_POST['password'])) {
+            include("views/login.php");
+        } else {
             $userName = $_POST['userName'];
             $password = $_POST['password'];
             $status = $this->userExist($userName, $password);
 
-            if ($status == 1) {
-                setcookie("login", 1, time() + 60, "/");
-                header("Location: index.php?controller=welcome&action=welcome");
-            } elseif ($status == 2) {
-                setcookie("error", "Klaida, prisijungti nepavyko ", time() + 15, "/");
+            if ($status == FALSE) {
+                include("views/error.php");
+            } elseif ($status == TRUE) {
+                setcookie("login", 'login', time() + self::COOKIE_EXPIRE_TIME, "/");
+                $_GET['controller'] = "welcome";
+                $_GET['action'] = "welcome";
+                header("Location: index.php");
             }
-        } else {
-            include("views/login.php");
         }
     }
 
     public function logoutAction() {
         if (isset($_POST['logout'])) {
-            setcookie("login", 1, time() - 60, "/");
-            header("Location: index.php?controller=login&action=login");
+            setcookie("login", 'logout', time() - self::COOKIE_EXPIRE_TIME, "/");
+            $_GET['controller'] = "login";
+            $_GET['action'] = "login";
+            header("Location: index.php");
         }
     }
 
@@ -36,9 +43,9 @@ class LoginController {
         $sqlQuery = "SELECT * FROM users WHERE userName='$userName' AND password='$password'";
         $result = $this->connection->query($sqlQuery);
         if ($result->num_rows > 0) {
-            return $status = 1;
+            return $status = TRUE;
         } else {
-            return $status = 2;
+            return $status = FALSE;
         }
     }
 

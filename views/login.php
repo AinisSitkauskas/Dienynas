@@ -25,13 +25,5 @@
             <br><br>
             <input type="submit"  value="Prisijungti">
         </form>
-        <br>
-        <?php
-        if (isset($_COOKIE['error'])) {
-            ?>
-            <p style="color:red; font-size:20px"> <?= $_COOKIE['error'] ?> </p>
-            <?php
-        }
-        ?>
     </body>
 </html>
