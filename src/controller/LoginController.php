@@ -20,7 +20,7 @@ class LoginController {
         $userName = $_POST['userName'];
         $password = $_POST['password'];
 
-        if ($this->userExist($userName, $password) == FALSE) {
+        if (!$this->userExist($userName, $password)) {
             include("views/error.php");
             return;
         }
@@ -41,9 +41,7 @@ class LoginController {
     private function userExist($userName, $password) {
         $sqlQuery = "SELECT * FROM users WHERE userName='$userName' AND password='$password'";
         $result = $this->connection->query($sqlQuery);
-        if ($result->num_rows > 0) {
-            return TRUE;
-        }
+        return $result->num_rows > 0;
     }
 
 }
