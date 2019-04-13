@@ -3,6 +3,7 @@
 include_once('connection.php');
 include_once("src/controller/LoginController.php");
 include_once("src/controller/WelcomeController.php");
+include_once("src/controller/RegistrationController.php");
 
 if (empty($_GET['controller']) || $_GET['controller'] == "welcome") {
     $controller = new WelcomeController($connection);
@@ -20,4 +21,10 @@ if (empty($_GET['controller']) || $_GET['controller'] == "welcome") {
             $controller->logoutAction();
             break;
     }
-} 
+} elseif ($_GET['controller'] == "registration") {
+    $controller = new RegistrationController($connection);
+
+    if ($_GET['action'] == "registration") {
+        $controller->registrationAction();
+    }
+}

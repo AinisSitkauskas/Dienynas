@@ -5,7 +5,7 @@
         <title>MySQL dienynas</title>
     </head>
     <body>
-        <p style="color:red; font-size:20px"> Klaida, prisijungti nepavyko! </p><br>
-        <a href="">Grįžti į prisijungimo puslapį</a> 
+        <p style="color:red; font-size:20px"> <?= $error ?></p><br>
+        <a href="index.php">Grįžti į prisijungimo puslapį</a> 
     </body>
 </html>

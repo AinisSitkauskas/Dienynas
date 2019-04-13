@@ -15,17 +15,14 @@
     </head>
     <body>
 
-        <h1>Dienynas </h1><br>
-        <form  method = "post" action="index.php?controller=login&action=login" >
+        <h1>Registracija </h1><br>
+        <form  method = "post" action="index.php?controller=registration&action=registration" >
             Vartotojo vardas:<br>
             <input type="text" name="userName">
             <br>
             Slaptažodis:<br>
             <input type="password" name="password">
             <br><br>
-            <input type="submit"  value="Prisijungti">
-        </form>
-        <form  method = "post" action="index.php?controller=registration&action=registration" >
             <input type="submit"  value="Registruotis">
         </form>
     </body>
