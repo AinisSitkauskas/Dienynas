@@ -6,6 +6,6 @@
     </head>
     <body>
         <p style="color:red; font-size:20px"> <?= $error ?></p><br>
-        <a href="index.php">Grįžti į prisijungimo puslapį</a> 
+        <a href="index.php">Grįžti atgal</a> 
     </body>
 </html>

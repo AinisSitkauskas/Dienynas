@@ -25,8 +25,5 @@
             <br><br>
             <input type="submit"  value="Prisijungti">
         </form>
-        <form  method = "post" action="index.php?controller=registration&action=registration" >
-            <input type="submit"  value="Registruotis">
-        </form>
     </body>
 </html>

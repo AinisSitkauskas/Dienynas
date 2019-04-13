@@ -15,7 +15,7 @@
     </head>
     <body>
         <h2> Sėkmingai užsiregistravote, dabar galite prisijungti !  </h2>
-        <a href="index.php">Grįžti į prisijungimo puslapį</a> 
+        <a href="index.php">Grįžti į pradinį puslapį</a> 
     </body>
 </html>
 

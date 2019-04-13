@@ -10,6 +10,11 @@ class RegistrationController {
 
     public function registrationAction() {
 
+        if (empty($_COOKIE['login'])) {
+            header("Location: index.php");
+            return;
+        }
+
         if (empty($_POST['userName']) || empty($_POST['password'])) {
             include("views/registration.php");
             return;
@@ -24,19 +29,19 @@ class RegistrationController {
             return;
         }
 
-        if (!$this->checkLenght($userName)) {
-            $error = "Užsiregistruoti nepavyko vartotojo vardas per trumpas";
+        if (strlen($userName) < 4) {
+            $error = "Užsiregistruoti nepavyko, vartotojo vardas per trumpas";
             include("views/error.php");
             return;
         }
 
-        if (!$this->checkLenght($password)) {
-            $error = "Užsiregistruoti nepavyko slaptažodis per trumpas";
+        if (strlen($password) < 4) {
+            $error = "Užsiregistruoti nepavyko, slaptažodis per trumpas";
             include("views/error.php");
             return;
         }
 
-        if (!$this->userRegistration($userName, $password)) {
+        if (!$this->registrateUser($userName, $password)) {
             $error = "Klaida, užsiregistruoti nepavyko";
             include("views/error.php");
             return;
@@ -51,13 +56,7 @@ class RegistrationController {
         return $result->num_rows > 0;
     }
 
-    private function checkLenght($account) {
-        if (strlen($account) > 3) {
-            return TRUE;
-        }
-    }
-
-    private function userRegistration($userName, $password) {
+    private function registrateUser($userName, $password) {
         $sqlQuerry = "INSERT INTO users (userName, password) VALUES ('$userName', '$password')";
         return $this->connection->query($sqlQuerry) === TRUE;
     }
