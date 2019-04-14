@@ -14,13 +14,16 @@
         </style>
     </head>
     <body>
-        <h1> Sveiki, atvykę !  </h1>
+
+        <h1>Registracija </h1><br>
         <form  method = "post" action="index.php?controller=registration&action=registration" >
-            Registruoti naują vartotoją:
-            <input type="submit"  value="Registruoti">
-        </form>
-        <form  method = "post" action="index.php?controller=login&action=logout" >
-            <input type="submit" name="logout"  value="Atsijungti">
+            Vartotojo vardas:<br>
+            <input type="text" name="userName">
+            <br>
+            Slaptažodis:<br>
+            <input type="password" name="password">
+            <br><br>
+            <input type="submit"  value="Registruotis">
         </form>
     </body>
 </html>

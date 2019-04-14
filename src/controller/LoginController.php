@@ -21,6 +21,7 @@ class LoginController {
         $password = $_POST['password'];
 
         if (!$this->userExist($userName, $password)) {
+            $error = "Klaida, prisijungti nepavyko! " ;
             include("views/error.php");
             return;
         }
