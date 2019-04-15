@@ -41,7 +41,7 @@ class RegistrationController {
             return;
         }
 
-        if (!$this->registrateUser($userName, $password)) {
+        if (!$this->registerUser($userName, $password)) {
             $error = "Klaida, užsiregistruoti nepavyko";
             include("views/error.php");
             return;
@@ -56,7 +56,7 @@ class RegistrationController {
         return $result->num_rows > 0;
     }
 
-    private function registrateUser($userName, $password) {
+    private function registerUser($userName, $password) {
         $sqlQuerry = "INSERT INTO users (userName, password) VALUES ('$userName', '$password')";
         return $this->connection->query($sqlQuerry) === TRUE;
     }
