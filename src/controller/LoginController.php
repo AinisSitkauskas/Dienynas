@@ -26,7 +26,7 @@ class LoginController {
             return;
         }
 
-        setcookie("login", 'login', time() + self::COOKIE_EXPIRE_TIME, "/");
+        setcookie("login", $userName, time() + self::COOKIE_EXPIRE_TIME, "/");
         $_GET['controller'] = "welcome";
         $_GET['action'] = "welcome";
         header("Location: index.php");

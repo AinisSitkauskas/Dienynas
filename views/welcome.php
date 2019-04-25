@@ -14,12 +14,20 @@
         </style>
     </head>
     <body>
-        <h1> Sveiki, atvykę !  </h1>
-        <form  method = "post" action="index.php?controller=registration&action=registration" >
+        <h1> Sveikas, sugrįžęs <?=$_COOKIE['login'] ?>.</h1>
+        <form  method = "post" action="index.php?controller=user&action=register" >
             Registruoti naują vartotoją:
+            <br>
             <input type="submit"  value="Registruoti">
         </form>
+        <form  method = "post" action="index.php?controller=user&action=delete" >
+            Ištrinti vartotoją:
+            <br>
+            <input type="submit"  value="Ištrinti">
+        </form>
         <form  method = "post" action="index.php?controller=login&action=logout" >
+            <br>
+            <br>
             <input type="submit" name="logout"  value="Atsijungti">
         </form>
     </body>

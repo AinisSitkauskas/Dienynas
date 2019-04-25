@@ -1,6 +1,8 @@
 <?php
 
-class RegistrationController {
+class UserController {
+
+    const COOKIE_EXPIRE_TIME = 3600;
 
     private $connection;
 
@@ -8,7 +10,7 @@ class RegistrationController {
         $this->connection = $connection;
     }
 
-    public function registrationAction() {
+    public function registerAction() {
 
         if (empty($_COOKIE['login'])) {
             header("Location: index.php");
@@ -41,7 +43,7 @@ class RegistrationController {
             return;
         }
 
-        if (!$this->registrateUser($userName, $password)) {
+        if (!$this->registerUser($userName, $password)) {
             $error = "Klaida, užsiregistruoti nepavyko";
             include("views/error.php");
             return;
@@ -56,8 +58,37 @@ class RegistrationController {
         return $result->num_rows > 0;
     }
 
-    private function registrateUser($userName, $password) {
+    private function registerUser($userName, $password) {
         $sqlQuerry = "INSERT INTO users (userName, password) VALUES ('$userName', '$password')";
+        return $this->connection->query($sqlQuerry) === TRUE;
+    }
+
+    public function deleteAction() {
+
+        if (empty($_COOKIE['login'])) {
+            header("Location: index.php");
+            return;
+        }
+
+        $userName = $_COOKIE['login'];
+
+        if ($userName == "admin") {
+            $error = "Administratoriaus ištrinti negalima";
+            include("views/error.php");
+            return;
+        }
+
+        if (!$this->deleteUser($userName)) {
+            $error = "Klaida, ištrinti vartotojo nepavyko";
+            include("views/error.php");
+            return;
+        }
+        setcookie("login", "delete", time() - self::COOKIE_EXPIRE_TIME, "/");
+        include("views/userDeleted.php");
+    }
+
+    private function deleteUser($userName) {
+        $sqlQuerry = "DELETE FROM users WHERE userName = '$userName'";
         return $this->connection->query($sqlQuerry) === TRUE;
     }
 

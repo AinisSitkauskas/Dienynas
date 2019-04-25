@@ -16,7 +16,7 @@
     <body>
 
         <h1>Registracija </h1><br>
-        <form  method = "post" action="index.php?controller=registration&action=registration" >
+        <form  method = "post" action="index.php?controller=user&action=register" >
             Vartotojo vardas:<br>
             <input type="text" name="userName">
             <br>
