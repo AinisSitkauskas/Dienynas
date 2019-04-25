@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 include_once('connection.php');
 include_once("src/controller/LoginController.php");
 include_once("src/controller/WelcomeController.php");

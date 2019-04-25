@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 15, 2019 at 09:50 PM
+-- Generation Time: Apr 25, 2019 at 10:57 PM
 -- Server version: 10.1.32-MariaDB
 -- PHP Version: 5.6.36
 
@@ -21,6 +21,18 @@ SET time_zone = "+00:00";
 --
 -- Database: `users`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `sessionid`
+--
+
+CREATE TABLE `sessionid` (
+  `id` int(255) NOT NULL,
+  `userName` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `sessionID` varchar(255) COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -46,6 +58,12 @@ INSERT INTO `users` (`id`, `userName`, `password`) VALUES
 --
 
 --
+-- Indexes for table `sessionid`
+--
+ALTER TABLE `sessionid`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -54,6 +72,12 @@ ALTER TABLE `users`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `sessionid`
+--
+ALTER TABLE `sessionid`
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `users`

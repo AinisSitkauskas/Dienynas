@@ -2,7 +2,7 @@
 
 class LoginController {
 
-    const COOKIE_EXPIRE_TIME = 3600;
+    const COOKIE_EXPIRE_TIME = 2678400;
 
     private $connection;
 
@@ -21,12 +21,18 @@ class LoginController {
         $password = $_POST['password'];
 
         if (!$this->userExist($userName, $password)) {
-            $error = "Klaida, prisijungti nepavyko! " ;
+            $error = "Klaida, prisijungti nepavyko! ";
             include("views/error.php");
             return;
         }
 
-        setcookie("login", $userName, time() + self::COOKIE_EXPIRE_TIME, "/");
+        if (!$this->createSessionID($userName)) {
+            $error = "Klaida, prisijungti nepavyko! ";
+            include("views/error.php");
+            return;
+        }
+
+        $_SESSION["userName"] = $userName;
         $_GET['controller'] = "welcome";
         $_GET['action'] = "welcome";
         header("Location: index.php");
@@ -34,7 +40,15 @@ class LoginController {
 
     public function logoutAction() {
         if (isset($_POST['logout'])) {
-            setcookie("login", 'logout', time() - self::COOKIE_EXPIRE_TIME, "/");
+
+            if (!$this->deleteSessionID()) {
+                $error = "Klaida, atsijungti nepavyko! ";
+                include("views/error.php");
+                return;
+            }
+
+            setcookie("sessionID", 'logout', time() - self::COOKIE_EXPIRE_TIME, "/");
+            session_unset();
             header("Location: index.php");
         }
     }
@@ -43,6 +57,25 @@ class LoginController {
         $sqlQuery = "SELECT * FROM users WHERE userName='$userName' AND password='$password'";
         $result = $this->connection->query($sqlQuery);
         return $result->num_rows > 0;
+    }
+
+    private function createSessionID($userName) {
+        $sessionID = "dhfjdhfjhdsjfh" . $userName . "skjdjskdjks" . $password . "ssdsdsdjsdj";
+
+        for ($i = 0; $i < 5424; $i++) {
+            $sessionID = sha1($sessionID);
+        }
+        $sqlQuerry = "INSERT INTO sessionid (userName, sessionID) VALUES ('$userName', '$sessionID')";
+       
+        if ($this->connection->query($sqlQuerry) === TRUE) {
+            setcookie("sessionID", $sessionID, time() + self::COOKIE_EXPIRE_TIME, "/");
+            return TRUE;
+        }
+    }
+
+    private function deleteSessionID() {
+        $sqlQuerry = "DELETE FROM sessionid";
+        return $this->connection->query($sqlQuerry) === TRUE;
     }
 
 }
