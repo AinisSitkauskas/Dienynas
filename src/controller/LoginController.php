@@ -20,8 +20,10 @@ class LoginController {
         $userName = $_POST['userName'];
         $password = $_POST['password'];
 
-        if (!$this->userExist($userName, $password)) {
-            $error = "Klaida, prisijungti nepavyko! " ;
+        $hashedAndSaltedPassword = $this->hashAndSaltPassword($userName, $password);
+
+        if (!$this->userExist($userName, $hashedAndSaltedPassword)) {
+            $error = "Klaida, prisijungti nepavyko! ";
             include("views/error.php");
             return;
         }
@@ -39,10 +41,19 @@ class LoginController {
         }
     }
 
-    private function userExist($userName, $password) {
-        $sqlQuery = "SELECT * FROM users WHERE userName='$userName' AND password='$password'";
+    private function userExist($userName, $hashedAndSaltedPassword) {
+        $sqlQuery = "SELECT * FROM users WHERE userName='$userName' AND password='$hashedAndSaltedPassword'";
         $result = $this->connection->query($sqlQuery);
         return $result->num_rows > 0;
+    }
+
+    private function hashAndSaltPassword($userName, $password) {
+        $hashedAndSaltedPassword = "dhfjdhfjhdsjfh" . $userName . "skjdjskdjks" . $password . "ssdsdsdjsdj";
+
+        for ($i = 0; $i < 1000; $i++) {
+            $hashedAndSaltedPassword = sha1($hashedAndSaltedPassword);
+        }
+        return $hashedAndSaltedPassword;
     }
 
 }

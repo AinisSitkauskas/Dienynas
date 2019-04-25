@@ -25,6 +25,8 @@ class UserController {
         $userName = $_POST['userName'];
         $password = $_POST['password'];
 
+
+
         if ($this->userExist($userName)) {
             $error = "Užsiregistruoti nepavyko, toks vartotojo vardas jau egzistuoja";
             include("views/error.php");
@@ -43,7 +45,9 @@ class UserController {
             return;
         }
 
-        if (!$this->registerUser($userName, $password)) {
+        $hashedAndSaltedPassword = $this->hashAndSaltPassword($userName, $password);
+
+        if (!$this->registerUser($userName, $hashedAndSaltedPassword)) {
             $error = "Klaida, užsiregistruoti nepavyko";
             include("views/error.php");
             return;
@@ -58,9 +62,18 @@ class UserController {
         return $result->num_rows > 0;
     }
 
-    private function registerUser($userName, $password) {
-        $sqlQuerry = "INSERT INTO users (userName, password) VALUES ('$userName', '$password')";
+    private function registerUser($userName, $hashedAndSaltedPassword) {
+        $sqlQuerry = "INSERT INTO users (userName, password) VALUES ('$userName', '$hashedAndSaltedPassword')";
         return $this->connection->query($sqlQuerry) === TRUE;
+    }
+
+    private function hashAndSaltPassword($userName, $password) {
+        $hashedAndSaltedPassword = "dhfjdhfjhdsjfh" . $userName . "skjdjskdjks" . $password . "ssdsdsdjsdj";
+
+        for ($i = 0; $i < 1000; $i++) {
+            $hashedAndSaltedPassword = sha1($hashedAndSaltedPassword);
+        }
+        return $hashedAndSaltedPassword;
     }
 
     public function deleteAction() {
