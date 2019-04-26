@@ -20,7 +20,8 @@ class LoginController {
         $userName = $_POST['userName'];
         $password = $_POST['password'];
 
-        $hashedAndSaltedPassword = $this->hashAndSaltPassword($userName, $password);
+        $passwordHasher = new PasswordHasher();
+        $hashedAndSaltedPassword = $passwordHasher->hashAndSaltPassword($userName, $password);
 
         if (!$this->userExist($userName, $hashedAndSaltedPassword)) {
             $error = "Klaida, prisijungti nepavyko! ";
@@ -45,15 +46,6 @@ class LoginController {
         $sqlQuery = "SELECT * FROM users WHERE userName='$userName' AND password='$hashedAndSaltedPassword'";
         $result = $this->connection->query($sqlQuery);
         return $result->num_rows > 0;
-    }
-
-    private function hashAndSaltPassword($userName, $password) {
-        $hashedAndSaltedPassword = "dhfjdhfjhdsjfh" . $userName . "skjdjskdjks" . $password . "ssdsdsdjsdj";
-
-        for ($i = 0; $i < 1000; $i++) {
-            $hashedAndSaltedPassword = sha1($hashedAndSaltedPassword);
-        }
-        return $hashedAndSaltedPassword;
     }
 
 }

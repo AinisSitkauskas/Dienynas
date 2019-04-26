@@ -1,9 +1,10 @@
 <?php
 
 include_once('connection.php');
-include_once("src/controller/LoginController.php");
-include_once("src/controller/WelcomeController.php");
-include_once("src/controller/UserController.php");
+include_once("src/Controller/LoginController.php");
+include_once("src/Controller/WelcomeController.php");
+include_once("src/Controller/UserController.php");
+include_once("src/Util/PasswordHasher.php");
 
 if (empty($_GET['controller']) || $_GET['controller'] == "welcome") {
     $controller = new WelcomeController($connection);
