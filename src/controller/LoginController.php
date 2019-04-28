@@ -2,8 +2,6 @@
 
 class LoginController {
 
-    const COOKIE_EXPIRE_TIME = 3600;
-
     private $connection;
 
     function __construct($connection) {
@@ -21,12 +19,12 @@ class LoginController {
         $password = $_POST['password'];
 
         if (!$this->userExist($userName, $password)) {
-            $error = "Klaida, prisijungti nepavyko! " ;
+            $error = "Klaida, prisijungti nepavyko! ";
             include("views/error.php");
             return;
         }
 
-        setcookie("login", $userName, time() + self::COOKIE_EXPIRE_TIME, "/");
+        $_SESSION['userName'] = $userName;
         $_GET['controller'] = "welcome";
         $_GET['action'] = "welcome";
         header("Location: index.php");
@@ -34,7 +32,7 @@ class LoginController {
 
     public function logoutAction() {
         if (isset($_POST['logout'])) {
-            setcookie("login", 'logout', time() - self::COOKIE_EXPIRE_TIME, "/");
+            session_unset();
             header("Location: index.php");
         }
     }

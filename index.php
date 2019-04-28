@@ -1,5 +1,9 @@
 <?php
 
+define("SESSION_LIFETIME", "2678400");
+session_set_cookie_params(SESSION_LIFETIME, "/");
+session_start();
+
 include_once('connection.php');
 include_once("src/controller/LoginController.php");
 include_once("src/controller/WelcomeController.php");

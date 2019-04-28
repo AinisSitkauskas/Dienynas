@@ -2,8 +2,6 @@
 
 class UserController {
 
-    const COOKIE_EXPIRE_TIME = 3600;
-
     private $connection;
 
     function __construct($connection) {
@@ -12,7 +10,7 @@ class UserController {
 
     public function registerAction() {
 
-        if (empty($_COOKIE['login'])) {
+        if (empty($_SESSION['userName'])) {
             header("Location: index.php");
             return;
         }
@@ -65,12 +63,12 @@ class UserController {
 
     public function deleteAction() {
 
-        if (empty($_COOKIE['login'])) {
+        if (empty($_SESSION['userName'])) {
             header("Location: index.php");
             return;
         }
 
-        $userName = $_COOKIE['login'];
+        $userName = $_SESSION['userName'];
 
         if ($userName == "admin") {
             $error = "Administratoriaus ištrinti negalima";
@@ -83,7 +81,7 @@ class UserController {
             include("views/error.php");
             return;
         }
-        setcookie("login", "delete", time() - self::COOKIE_EXPIRE_TIME, "/");
+        session_unset();
         include("views/userDeleted.php");
     }
 
