@@ -44,10 +44,10 @@ class UserController {
         }
 
         $passwordHasher = new PasswordHasher();
-        $hashedAndSaltedPassword = $passwordHasher->hashAndSaltPassword($userName, $password);
+        $hashedPassword = $passwordHasher->hashAndSaltPassword($userName, $password);
 
 
-        if (!$this->registerUser($userName, $hashedAndSaltedPassword)) {
+        if (!$this->registerUser($userName, $hashedPassword)) {
             $error = "Klaida, užsiregistruoti nepavyko";
             include("views/error.php");
             return;
@@ -62,8 +62,8 @@ class UserController {
         return $result->num_rows > 0;
     }
 
-    private function registerUser($userName, $hashedAndSaltedPassword) {
-        $sqlQuerry = "INSERT INTO users (userName, password) VALUES ('$userName', '$hashedAndSaltedPassword')";
+    private function registerUser($userName, $hashedPassword) {
+        $sqlQuerry = "INSERT INTO users (userName, password) VALUES ('$userName', '$hashedPassword')";
         return $this->connection->query($sqlQuerry) === TRUE;
     }
 
