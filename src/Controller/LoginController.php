@@ -6,8 +6,15 @@ class LoginController {
 
     private $connection;
 
-    function __construct($connection) {
+    /**
+     *
+     * @var PasswordHasher
+     */
+    private $passwordHasher;
+
+    function __construct($connection, $passwordHasher) {
         $this->connection = $connection;
+        $this->passwordHasher = $passwordHasher;
     }
 
     public function loginAction() {
@@ -20,11 +27,18 @@ class LoginController {
         $userName = $_POST['userName'];
         $password = $_POST['password'];
 
-        $passwordHasher = new PasswordHasher();
-        $hashedPassword = $passwordHasher->hashAndSaltPassword($userName, $password);
+        $row = $this->getUserRow($userName);
+
+        if ($row == FALSE) {
+            $error = "Klaida, prisijungti nepavyko! ";
+            include("views/error.php");
+            return;
+        }
+        
+        $hashedPassword = $this->passwordHasher->hashAndLoginPassword($password, $row);
 
         if (!$this->userExist($userName, $hashedPassword)) {
-            $error = "Klaida, prisijungti nepavyko! ";
+            $error = "Prisijungti nepavyko, jūsų slaptažodis neteisingas! ";
             include("views/error.php");
             return;
         }
@@ -39,6 +53,17 @@ class LoginController {
         if (isset($_POST['logout'])) {
             setcookie("login", 'logout', time() - self::COOKIE_EXPIRE_TIME, "/");
             header("Location: index.php");
+        }
+    }
+
+    private function getUserRow($userName) {
+        $sqlQuery = "SELECT salt, hashTimes FROM users WHERE userName='$userName'";
+        $result = $this->connection->query($sqlQuery);
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            return $row;
+        } else {
+            return FALSE;
         }
     }
 

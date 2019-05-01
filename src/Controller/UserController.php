@@ -6,8 +6,15 @@ class UserController {
 
     private $connection;
 
-    function __construct($connection) {
+    /**
+     *
+     * @var PasswordHasher
+     */
+    private $passwordHasher;
+
+    function __construct($connection, $passwordHasher) {
         $this->connection = $connection;
+        $this->passwordHasher = $passwordHasher;
     }
 
     public function registerAction() {
@@ -43,11 +50,9 @@ class UserController {
             return;
         }
 
-        $passwordHasher = new PasswordHasher();
-        $hashedPassword = $passwordHasher->hashAndSaltPassword($userName, $password);
+        $passwordInfo = $this->passwordHasher->hashAndRegisterPassword($password);
 
-
-        if (!$this->registerUser($userName, $hashedPassword)) {
+        if (!$this->registerUser($userName, $passwordInfo)) {
             $error = "Klaida, užsiregistruoti nepavyko";
             include("views/error.php");
             return;
@@ -62,8 +67,12 @@ class UserController {
         return $result->num_rows > 0;
     }
 
-    private function registerUser($userName, $hashedPassword) {
-        $sqlQuerry = "INSERT INTO users (userName, password) VALUES ('$userName', '$hashedPassword')";
+    private function registerUser($userName, $passwordInfo) {
+        $password = $passwordInfo[0];
+        $salt = $passwordInfo[1];
+        $hashTimes = $passwordInfo[2];
+
+        $sqlQuerry = "INSERT INTO users (userName, password, salt, hashTimes ) VALUES ('$userName', '$password', '$salt', '$hashTimes')";
         return $this->connection->query($sqlQuerry) === TRUE;
     }
 
