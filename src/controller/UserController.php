@@ -53,14 +53,19 @@ class UserController {
     }
 
     private function userExist($userName) {
-        $sqlQuery = "SELECT * FROM users WHERE userName='$userName'";
-        $result = $this->connection->query($sqlQuery);
-        return $result->num_rows > 0;
+        $sqlQuery = $this->connection->prepare("SELECT * FROM users WHERE userName=:userName");
+        $sqlQuery->bindParam(':userName', $userName);
+        $sqlQuery->execute();
+        $sqlQuery->setFetchMode(PDO::FETCH_ASSOC);
+        $result = $sqlQuery->fetchColumn();
+        return $result > 0;
     }
 
     private function registerUser($userName, $password) {
-        $sqlQuerry = "INSERT INTO users (userName, password) VALUES ('$userName', '$password')";
-        return $this->connection->query($sqlQuerry) === TRUE;
+        $sqlQuery = $this->connection->prepare($sqlQuerry = "INSERT INTO users (userName, password) VALUES (:userName, :password)");
+        $sqlQuery->bindParam(':userName', $userName);
+        $sqlQuery->bindParam(':password', $password);
+        return $sqlQuery->execute() === TRUE;
     }
 
     public function deleteAction() {
@@ -88,8 +93,9 @@ class UserController {
     }
 
     private function deleteUser($userName) {
-        $sqlQuerry = "DELETE FROM users WHERE userName = '$userName'";
-        return $this->connection->query($sqlQuerry) === TRUE;
+        $sqlQuery = $this->connection->prepare($sqlQuerry = "DELETE FROM users WHERE userName = :userName");
+        $sqlQuery->bindParam(':userName', $userName);
+        return $sqlQuery->execute() === TRUE;
     }
 
 }
