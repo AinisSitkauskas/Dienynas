@@ -50,7 +50,7 @@ class UserController {
             return;
         }
 
-        $passwordInfo = $this->passwordHasher->hashAndRegisterPassword($password);
+        $passwordInfo = $this->passwordHasher->hashPassword($password);
 
         if (!$this->registerUser($userName, $passwordInfo)) {
             $error = "Klaida, užsiregistruoti nepavyko";

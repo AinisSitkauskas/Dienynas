@@ -34,10 +34,8 @@ class LoginController {
             include("views/error.php");
             return;
         }
-        
-        $hashedPassword = $this->passwordHasher->hashAndLoginPassword($password, $row);
 
-        if (!$this->userExist($userName, $hashedPassword)) {
+        if (!$this->passwordHasher->passwordsEqual($password, $row)) {
             $error = "Prisijungti nepavyko, jūsų slaptažodis neteisingas! ";
             include("views/error.php");
             return;
@@ -57,7 +55,7 @@ class LoginController {
     }
 
     private function getUserRow($userName) {
-        $sqlQuery = "SELECT salt, hashTimes FROM users WHERE userName='$userName'";
+        $sqlQuery = "SELECT password, salt, hashTimes FROM users WHERE userName='$userName'";
         $result = $this->connection->query($sqlQuery);
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
@@ -65,12 +63,6 @@ class LoginController {
         } else {
             return FALSE;
         }
-    }
-
-    private function userExist($userName, $hashedPassword) {
-        $sqlQuery = "SELECT * FROM users WHERE userName='$userName' AND password='$hashedPassword'";
-        $result = $this->connection->query($sqlQuery);
-        return $result->num_rows > 0;
     }
 
 }
