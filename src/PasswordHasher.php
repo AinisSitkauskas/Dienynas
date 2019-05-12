@@ -2,7 +2,7 @@
 
 interface PasswordHasher {
 
-    public function passwordsEqual($password, $row);
+    public function passwordsEqual($userName, $password);
 
     public function hashPassword($password);
 }

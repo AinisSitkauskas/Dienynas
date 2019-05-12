@@ -4,6 +4,10 @@ class UserController {
 
     const COOKIE_EXPIRE_TIME = 3600;
 
+    /**
+     *
+     * @var conection
+     */
     private $connection;
 
     /**
@@ -17,6 +21,10 @@ class UserController {
         $this->passwordHasher = $passwordHasher;
     }
 
+    /**
+     * 
+     * @return NULL
+     */
     public function registerAction() {
 
         if (empty($_COOKIE['login'])) {
@@ -61,12 +69,23 @@ class UserController {
         include("views/succsesfulRegistration.php");
     }
 
+    /**
+     * 
+     * @param string $userName
+     * @return boolean
+     */
     private function userExist($userName) {
         $sqlQuery = "SELECT * FROM users WHERE userName='$userName'";
         $result = $this->connection->query($sqlQuery);
         return $result->num_rows > 0;
     }
 
+    /**
+     * 
+     * @param string $userName
+     * @param string $passwordInfo
+     * @return boolean
+     */
     private function registerUser($userName, $passwordInfo) {
         $password = $passwordInfo[0];
         $salt = $passwordInfo[1];
@@ -76,6 +95,10 @@ class UserController {
         return $this->connection->query($sqlQuerry) === TRUE;
     }
 
+    /**
+     * 
+     * @return NULL
+     */
     public function deleteAction() {
 
         if (empty($_COOKIE['login'])) {
@@ -100,6 +123,11 @@ class UserController {
         include("views/userDeleted.php");
     }
 
+    /**
+     * 
+     * @param string $userName
+     * @return boolean
+     */
     private function deleteUser($userName) {
         $sqlQuerry = "DELETE FROM users WHERE userName = '$userName'";
         return $this->connection->query($sqlQuerry) === TRUE;

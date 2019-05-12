@@ -7,8 +7,11 @@ include_once("src/Controller/UserController.php");
 include_once("src/PasswordHasher/Md5Hasher.php");
 include_once("src/PasswordHasher/Sha1Hasher.php");
 include_once("src/PasswordHasher.php");
+include_once("src/UserData.php");
 
-$passwordHasher = new Sha1Hasher();
+$userData = new UserData($connection);
+$passwordHasher = new Sha1Hasher($userData);
+
 
 if (empty($_GET['controller']) || $_GET['controller'] == "welcome") {
     $controller = new WelcomeController($connection);

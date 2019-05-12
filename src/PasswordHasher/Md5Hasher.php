@@ -1,9 +1,25 @@
 <?php
 
 include_once("src/PasswordHasher.php");
+include_once("src/UserData.php");
 
-class md5Hasher implements PasswordHasher {
+class Md5Hasher implements PasswordHasher {
 
+    /**
+     *
+     * @var UserData
+     */
+    private $userData;
+
+    function __construct($userData) {
+        $this->userData = $userData;
+    }
+
+    /**
+     *
+     * @param string $password
+     * @return array
+     */
     public function hashPassword($password) {
 
         $uniqueSalt = $this->getUniqueSalt();
@@ -19,19 +35,30 @@ class md5Hasher implements PasswordHasher {
         return $passwordInfo = array($hashedPassword, $uniqueSalt, $n);
     }
 
-    public function passwordsEqual($password, $row) {
+    /**
+     * 
+     * @param string $userName
+     * @param string $password
+     * @return boolean
+     */
+    public function passwordsEqual($userName, $password) {
 
-        $uniqueSalt = $row["salt"];
+        $userData = $this->userData->getUserData($userName);
+        $uniqueSalt = $userData["salt"];
         $hashedPassword = $uniqueSalt . $password;
-        $n = $row["hashTimes"];
+        $n = $userData["hashTimes"];
 
         for ($i = 0; $i < $n; $i++) {
             $hashedPassword = md5($hashedPassword);
         }
 
-        return $hashedPassword == $row["password"];
+        return $hashedPassword == $userData["password"];
     }
 
+    /**
+     * 
+     * @return string
+     */
     private function getUniqueSalt() {
 
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
