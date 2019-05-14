@@ -6,7 +6,7 @@ class LoginController {
 
     /**
      *
-     * @var connection
+     * @var mysqli connection
      */
     private $connection;
 
@@ -21,12 +21,7 @@ class LoginController {
         $this->passwordHasher = $passwordHasher;
     }
 
-    /**
-     * 
-     * @return NULL
-     */
     public function loginAction() {
-
         if (empty($_POST['userName']) || empty($_POST['password'])) {
             include("views/login.php");
             return;
@@ -34,9 +29,17 @@ class LoginController {
 
         $userName = $_POST['userName'];
         $password = $_POST['password'];
+        $row = $this->getUserRow($userName);
+        if ($row == FALSE) {
+            $error = "Klaida, prisijungti nepavyko! ";
+            include("views/error.php");
+            return;
+        }
 
-        if (!$this->passwordHasher->passwordsEqual($userName, $password)) {
-            $error = "Prisijungti nepavyko, jūsų vartotojo vardas arba slaptažodis neteisingas! ";
+        $userDTO = new UserDTO($password, $row);
+
+        if (!$this->passwordHasher->passwordsEqual($userDTO)) {
+            $error = "Prisijungti nepavyko, jūsų slaptažodis neteisingas! ";
             include("views/error.php");
             return;
         }
@@ -47,13 +50,26 @@ class LoginController {
         header("Location: index.php");
     }
 
-    /**
-     * @return NULL 
-     */
     public function logoutAction() {
         if (isset($_POST['logout'])) {
             setcookie("login", 'logout', time() - self::COOKIE_EXPIRE_TIME, "/");
             header("Location: index.php");
+        }
+    }
+
+    /**
+     * 
+     * @param string $userName
+     * @return array OR boolean
+     */
+    private function getUserRow($userName) {
+        $sqlQuery = "SELECT password, salt, hashTimes FROM users WHERE userName='$userName'";
+        $result = $this->connection->query($sqlQuery);
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            return $row;
+        } else {
+            return FALSE;
         }
     }
 

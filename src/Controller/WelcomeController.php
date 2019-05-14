@@ -2,9 +2,6 @@
 
 class WelcomeController {
 
-    /**
-     * @return NULL
-     */
     function welcomeAction() {
 
         if (isset($_COOKIE['login'])) {

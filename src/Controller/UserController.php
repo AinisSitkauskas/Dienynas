@@ -6,7 +6,7 @@ class UserController {
 
     /**
      *
-     * @var conection
+     * @var mysqli connection
      */
     private $connection;
 
@@ -21,10 +21,6 @@ class UserController {
         $this->passwordHasher = $passwordHasher;
     }
 
-    /**
-     * 
-     * @return NULL
-     */
     public function registerAction() {
 
         if (empty($_COOKIE['login'])) {
@@ -83,7 +79,7 @@ class UserController {
     /**
      * 
      * @param string $userName
-     * @param string $passwordInfo
+     * @param array $passwordInfo
      * @return boolean
      */
     private function registerUser($userName, $passwordInfo) {
@@ -95,10 +91,6 @@ class UserController {
         return $this->connection->query($sqlQuerry) === TRUE;
     }
 
-    /**
-     * 
-     * @return NULL
-     */
     public function deleteAction() {
 
         if (empty($_COOKIE['login'])) {

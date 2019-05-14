@@ -1,19 +1,8 @@
 <?php
 
 include_once("src/PasswordHasher.php");
-include_once("src/UserData.php");
 
 class Sha1Hasher implements PasswordHasher {
-
-    /**
-     *
-     * @var UserData
-     */
-    private $userData;
-
-    function __construct($userData) {
-        $this->userData = $userData;
-    }
 
     /**
      *
@@ -37,22 +26,21 @@ class Sha1Hasher implements PasswordHasher {
 
     /**
      * 
-     * @param string $userName
-     * @param string $password
+     * @param UserDTO
      * @return boolean
      */
-    public function passwordsEqual($userName, $password) {
+    public function passwordsEqual($userDTO) {
 
-        $userData = $this->userData->getUserData($userName);
-        $uniqueSalt = $userData["salt"];
+        $uniqueSalt = $userDTO->getUniqueSalt;
+        $password = $userDTO->getPassword;
         $hashedPassword = $uniqueSalt . $password;
-        $n = $userData["hashTimes"];
+        $n = $userDTO->getHashTimes;
 
         for ($i = 0; $i < $n; $i++) {
             $hashedPassword = sha1($hashedPassword);
         }
 
-        return $hashedPassword == $userData["password"];
+        return $hashedPassword == $userDTO->getHashedPassword;
     }
 
     /**
