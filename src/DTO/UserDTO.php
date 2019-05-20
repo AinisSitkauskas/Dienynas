@@ -4,55 +4,91 @@ class UserDTO {
 
     /**
      *
-     * @var array 
+     * @var string
      */
-    private $userInformation;
+    private $password;
 
     /**
      *
      * @var string
      */
-    private $password;
+    private $hashedPassword;
 
-    function __construct($password, $userInformation) {
-        $this->userInformation = $userInformation;
-        $this->userInformation = $password;
-    }
+    /**
+     *
+     * @var string 
+     */
+    private $uniqueSalt;
+
+    /**
+     *
+     * @var integer
+     */
+    private $hashTimes;
 
     /**
      * 
      * @param string $password
-     * @return string
      */
-    public function getPassword($password) {
-        return $password;
+    public function setPassword($password) {
+        $this->password = $password;
     }
 
     /**
      * 
-     * @param array $userInformation
      * @return string
      */
-    public function getHashedPassword($userInformation) {
-        return $userInformation["password"];
+    public function getPassword() {
+        return $this->password;
     }
 
     /**
      * 
-     * @param array $userInformation
-     * @return string
+     * @param string $hashedPassword
+     * 
      */
-    public function getUniqueSalt($userInformation) {
-        return $userInformation["salt"];
+    public function setHashedPassword($hashedPassword) {
+        $this->hashedPassword = $hashedPassword;
     }
 
     /**
      * 
-     * @param array $userInformation
      * @return string
      */
-    public function getHashTimes($userInformation) {
-        return $userInformation["hashTimes"];
+    public function getHashedPassword() {
+        return $this->hashedPassword;
+    }
+
+    /**
+     * 
+     * @param string $uniqueSalt
+     */
+    public function setUniqueSalt($uniqueSalt) {
+        $this->uniqueSalt = $uniqueSalt;
+    }
+
+    /**
+     * 
+     * @return string
+     */
+    public function getUniqueSalt() {
+        return $this->uniqueSalt;
+    }
+
+    /**
+     * 
+     * @param integer $hashTimes
+     */
+    public function setHashTimes($hashTimes) {
+        $this->hashTimes = $hashTimes;
+    }
+
+    /**
+     * 
+     * @return integer
+     */
+    public function getHashTimes() {
+        return $this->hashTimes;
     }
 
 }

@@ -36,7 +36,11 @@ class LoginController {
             return;
         }
 
-        $userDTO = new UserDTO($password, $row);
+        $userDTO = new UserDTO();
+        $userDTO->setPassword($password);
+        $userDTO->setHashedPassword($row['password']);
+        $userDTO->setUniqueSalt($row['uniqueSalt']);
+        $userDTO->setHashTimes($row['hashTimes']);
 
         if (!$this->passwordHasher->passwordsEqual($userDTO)) {
             $error = "Prisijungti nepavyko, jūsų slaptažodis neteisingas! ";
