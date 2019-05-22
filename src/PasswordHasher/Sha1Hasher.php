@@ -29,18 +29,17 @@ class Sha1Hasher implements PasswordHasher {
      * @param UserDTO
      * @return boolean
      */
-    public function passwordsEqual($userDTO) {
+    public function passwordsEqual($password, $user) {
 
-        $uniqueSalt = $userDTO->getUniqueSalt;
-        $password = $userDTO->getPassword;
+        $uniqueSalt = $user->getSalt();
         $hashedPassword = $uniqueSalt . $password;
-        $n = $userDTO->getHashTimes;
+        $n = $user->getHashTimes();
 
         for ($i = 0; $i < $n; $i++) {
             $hashedPassword = sha1($hashedPassword);
         }
 
-        return $hashedPassword == $userDTO->getHashedPassword;
+        return $hashedPassword === $user->getHashedPassword();
     }
 
     /**

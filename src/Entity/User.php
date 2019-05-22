@@ -1,12 +1,6 @@
 <?php
 
-class UserDTO {
-
-    /**
-     *
-     * @var string
-     */
-    private $password;
+class User {
 
     /**
      *
@@ -18,29 +12,13 @@ class UserDTO {
      *
      * @var string 
      */
-    private $uniqueSalt;
+    private $salt;
 
     /**
      *
      * @var integer
      */
     private $hashTimes;
-
-    /**
-     * 
-     * @param string $password
-     */
-    public function setPassword($password) {
-        $this->password = $password;
-    }
-
-    /**
-     * 
-     * @return string
-     */
-    public function getPassword() {
-        return $this->password;
-    }
 
     /**
      * 
@@ -61,18 +39,18 @@ class UserDTO {
 
     /**
      * 
-     * @param string $uniqueSalt
+     * @param string $salt
      */
-    public function setUniqueSalt($uniqueSalt) {
-        $this->uniqueSalt = $uniqueSalt;
+    public function setSalt($salt) {
+        $this->salt = $salt;
     }
 
     /**
      * 
      * @return string
      */
-    public function getUniqueSalt() {
-        return $this->uniqueSalt;
+    public function getSalt() {
+        return $this->salt;
     }
 
     /**

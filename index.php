@@ -7,7 +7,7 @@ include_once("src/Controller/UserController.php");
 include_once("src/PasswordHasher/Md5Hasher.php");
 include_once("src/PasswordHasher/Sha1Hasher.php");
 include_once("src/PasswordHasher.php");
-include_once("src/DTO/UserDTO.php");
+include_once("src/Entity/User.php");
 
 $passwordHasher = new Sha1Hasher();
 
