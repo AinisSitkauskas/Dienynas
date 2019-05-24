@@ -20,13 +20,13 @@ class User {
      */
     private $hashTimes;
 
-    /**
-     * 
-     * @param string $hashedPassword
-     * 
-     */
+/**
+ * 
+ * @param string $hashedPassword
+ */
     public function setHashedPassword($hashedPassword) {
         $this->hashedPassword = $hashedPassword;
+        return $this;
     }
 
     /**
@@ -43,6 +43,7 @@ class User {
      */
     public function setSalt($salt) {
         $this->salt = $salt;
+        return $this;
     }
 
     /**
@@ -59,6 +60,7 @@ class User {
      */
     public function setHashTimes($hashTimes) {
         $this->hashTimes = $hashTimes;
+        return $this;
     }
 
     /**

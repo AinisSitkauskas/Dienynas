@@ -2,14 +2,14 @@
 
 include_once("src/PasswordHasher.php");
 
-class Md5Hasher implements PasswordHasher {
+class md5Hasher implements PasswordHasher {
 
     /**
-     *
+     * 
      * @param string $password
-     * @return array
+     * @param User $user
      */
-    public function hashPassword($password) {
+    public function setPassword($password, $user) {
 
         $uniqueSalt = $this->getUniqueSalt();
         $hashedPassword = $uniqueSalt . $password;
@@ -20,13 +20,17 @@ class Md5Hasher implements PasswordHasher {
             $hashedPassword = md5($hashedPassword);
             $n++;
         }
-
-        return $passwordInfo = array($hashedPassword, $uniqueSalt, $n);
+        
+        $user->setSalt($uniqueSalt)
+             ->setHashTimes($n)
+             ->setHashedPassword();
+        return;
     }
 
     /**
      * 
-     * @param UserDTO
+     * @param string $password
+     * @param User $user
      * @return boolean
      */
     public function passwordsEqual($password, $user) {

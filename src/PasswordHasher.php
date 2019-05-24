@@ -2,7 +2,17 @@
 
 interface PasswordHasher {
 
+    /**
+     * 
+     * @param string $password
+     * @param User $user
+     */
     public function passwordsEqual($password, $user);
 
-    public function hashPassword($password);
+    /**
+     * 
+     * @param string $password
+     * @param User $user
+     */
+    public function setPassword($password, $user);
 }

@@ -5,11 +5,11 @@ include_once("src/PasswordHasher.php");
 class Sha1Hasher implements PasswordHasher {
 
     /**
-     *
+     * 
      * @param string $password
-     * @return array
+     * @param User $user
      */
-    public function hashPassword($password) {
+    public function setPassword($password, $user) {
 
         $uniqueSalt = $this->getUniqueSalt();
         $hashedPassword = $uniqueSalt . $password;
@@ -20,13 +20,17 @@ class Sha1Hasher implements PasswordHasher {
             $hashedPassword = sha1($hashedPassword);
             $n++;
         }
-
-        return $passwordInfo = array($hashedPassword, $uniqueSalt, $n);
+        
+        $user->setSalt($uniqueSalt)
+             ->setHashTimes($n)
+             ->setHashedPassword($hashedPassword);
+        return ;
     }
 
     /**
      * 
-     * @param UserDTO
+     * @param string $password
+     * @param User $user
      * @return boolean
      */
     public function passwordsEqual($password, $user) {

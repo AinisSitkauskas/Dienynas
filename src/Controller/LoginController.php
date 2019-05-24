@@ -16,9 +16,22 @@ class LoginController {
      */
     private $passwordHasher;
 
-    function __construct($connection, $passwordHasher) {
+    /**
+     *
+     * @var User
+     */
+    private $user;
+
+    /**
+     * 
+     * @param mysqli connection $connection
+     * @param PasswordHasher $passwordHasher
+     * @param User $user
+     */
+    function __construct($connection, $passwordHasher, $user) {
         $this->connection = $connection;
         $this->passwordHasher = $passwordHasher;
+        $this->user = $user;
     }
 
     public function loginAction() {
@@ -29,19 +42,14 @@ class LoginController {
 
         $userName = $_POST['userName'];
         $password = $_POST['password'];
-        $row = $this->getUserRow($userName);
-        if ($row == FALSE) {
+
+        if (!$this->getUser($userName)) {
             $error = "Klaida, prisijungti nepavyko! ";
             include("views/error.php");
             return;
         }
 
-        $user = new User();
-        $user->setHashedPassword($row['password']);
-        $user->setSalt($row['salt']);
-        $user->setHashTimes($row['hashTimes']);
-
-        if (!$this->passwordHasher->passwordsEqual($password, $user)) {
+        if (!$this->passwordHasher->passwordsEqual($password, $this->user)) {
             $error = "Prisijungti nepavyko, jūsų slaptažodis neteisingas! ";
             include("views/error.php");
             return;
@@ -63,14 +71,17 @@ class LoginController {
     /**
      * 
      * @param string $userName
-     * @return array OR boolean
+     * @return boolean
      */
-    private function getUserRow($userName) {
+    private function getUser($userName) {
         $sqlQuery = "SELECT password, salt, hashTimes FROM users WHERE userName='$userName'";
         $result = $this->connection->query($sqlQuery);
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
-            return $row;
+            $this->user->setHashedPassword($row['password'])
+                        ->setSalt($row['salt'])
+                        ->setHashTimes($row['hashTimes']);
+            return TRUE;
         } else {
             return FALSE;
         }
