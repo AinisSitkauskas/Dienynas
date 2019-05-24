@@ -79,8 +79,8 @@ class LoginController {
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
             $this->user->setHashedPassword($row['password'])
-                        ->setSalt($row['salt'])
-                        ->setHashTimes($row['hashTimes']);
+                    ->setSalt($row['salt'])
+                    ->setHashTimes($row['hashTimes']);
             return TRUE;
         } else {
             return FALSE;

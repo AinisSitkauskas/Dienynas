@@ -20,11 +20,11 @@ class Sha1Hasher implements PasswordHasher {
             $hashedPassword = sha1($hashedPassword);
             $n++;
         }
-        
+
         $user->setSalt($uniqueSalt)
-             ->setHashTimes($n)
-             ->setHashedPassword($hashedPassword);
-        return ;
+                ->setHashTimes($n)
+                ->setHashedPassword($hashedPassword);
+        return;
     }
 
     /**

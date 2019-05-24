@@ -20,10 +20,10 @@ class md5Hasher implements PasswordHasher {
             $hashedPassword = md5($hashedPassword);
             $n++;
         }
-        
+
         $user->setSalt($uniqueSalt)
-             ->setHashTimes($n)
-             ->setHashedPassword();
+                ->setHashTimes($n)
+                ->setHashedPassword();
         return;
     }
 
