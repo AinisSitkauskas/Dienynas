@@ -6,7 +6,7 @@ class UserController {
 
     /**
      *
-     * @var mysqli connection
+     * @var mysqli 
      */
     private $connection;
 
@@ -24,14 +24,13 @@ class UserController {
 
     /**
      * 
-     * @param mysqli connection $connection
+     * @param mysqli $connection
      * @param PasswordHasher $passwordHasher
-     * @param User $user
      */
-    function __construct($connection, $passwordHasher, $user) {
+    function __construct($connection, $passwordHasher) {
         $this->connection = $connection;
         $this->passwordHasher = $passwordHasher;
-        $this->user = $user;
+        $this->user = new User();
     }
 
     public function registerAction() {

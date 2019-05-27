@@ -10,7 +10,6 @@ include_once("src/PasswordHasher.php");
 include_once("src/Entity/User.php");
 
 $passwordHasher = new Sha1Hasher();
-$user = new User();
 
 if (empty($_GET['controller']) || $_GET['controller'] == "welcome") {
     $controller = new WelcomeController($connection);
@@ -19,7 +18,7 @@ if (empty($_GET['controller']) || $_GET['controller'] == "welcome") {
         $controller->welcomeAction();
     }
 } elseif ($_GET['controller'] == "login") {
-    $controller = new LoginController($connection, $passwordHasher, $user);
+    $controller = new LoginController($connection, $passwordHasher);
     switch ($_GET['action']) {
         case "login" :
             $controller->loginAction();
@@ -29,7 +28,7 @@ if (empty($_GET['controller']) || $_GET['controller'] == "welcome") {
             break;
     }
 } elseif ($_GET['controller'] == "user") {
-    $controller = new UserController($connection, $passwordHasher, $user);
+    $controller = new UserController($connection, $passwordHasher);
     switch ($_GET['action']) {
         case "register" :
             $controller->registerAction();
