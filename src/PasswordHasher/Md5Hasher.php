@@ -2,7 +2,7 @@
 
 include_once("src/PasswordHasher.php");
 
-class md5Hasher implements PasswordHasher {
+class Md5Hasher implements PasswordHasher {
 
     /**
      * 
@@ -23,7 +23,7 @@ class md5Hasher implements PasswordHasher {
 
         $user->setSalt($uniqueSalt)
                 ->setHashTimes($n)
-                ->setHashedPassword();
+                ->setHashedPassword($hashedPassword);
         return;
     }
 
@@ -35,8 +35,7 @@ class md5Hasher implements PasswordHasher {
      */
     public function passwordsEqual($password, $user) {
 
-        $uniqueSalt = $user->getSalt();
-        $hashedPassword = $uniqueSalt . $password;
+        $hashedPassword = $user->getSalt() . $password;
         $n = $user->getHashTimes();
 
         for ($i = 0; $i < $n; $i++) {

@@ -17,12 +17,6 @@ class LoginController {
     private $passwordHasher;
 
     /**
-     *
-     * @var User
-     */
-    private $user;
-
-    /**
      * 
      * @param mysqli $connection
      * @param PasswordHasher $passwordHasher
@@ -30,7 +24,6 @@ class LoginController {
     function __construct($connection, $passwordHasher) {
         $this->connection = $connection;
         $this->passwordHasher = $passwordHasher;
-        $this->user = new User();
     }
 
     public function loginAction() {
@@ -42,13 +35,15 @@ class LoginController {
         $userName = $_POST['userName'];
         $password = $_POST['password'];
 
-        if (!$this->getUser($userName)) {
+        $user = new User();
+        
+        if (!$this->getUser($userName, $user)) {
             $error = "Klaida, prisijungti nepavyko! ";
             include("views/error.php");
             return;
         }
 
-        if (!$this->passwordHasher->passwordsEqual($password, $this->user)) {
+        if (!$this->passwordHasher->passwordsEqual($password, $user)) {
             $error = "Prisijungti nepavyko, jūsų slaptažodis neteisingas! ";
             include("views/error.php");
             return;
@@ -70,14 +65,15 @@ class LoginController {
     /**
      * 
      * @param string $userName
-     * @return boolean
+     * @param User $user
+     * @return User OR null
      */
-    private function getUser($userName) {
+    private function getUser($userName, $user) {
         $sqlQuery = "SELECT password, salt, hashTimes FROM users WHERE userName='$userName'";
         $result = $this->connection->query($sqlQuery);
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
-            $this->user->setHashedPassword($row['password'])
+            $user->setHashedPassword($row['password'])
                     ->setSalt($row['salt'])
                     ->setHashTimes($row['hashTimes']);
             return TRUE;

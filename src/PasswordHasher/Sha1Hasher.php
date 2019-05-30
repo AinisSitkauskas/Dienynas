@@ -35,8 +35,7 @@ class Sha1Hasher implements PasswordHasher {
      */
     public function passwordsEqual($password, $user) {
 
-        $uniqueSalt = $user->getSalt();
-        $hashedPassword = $uniqueSalt . $password;
+        $hashedPassword = $user->getSalt() . $password;
         $n = $user->getHashTimes();
 
         for ($i = 0; $i < $n; $i++) {

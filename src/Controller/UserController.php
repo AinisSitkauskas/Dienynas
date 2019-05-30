@@ -17,12 +17,6 @@ class UserController {
     private $passwordHasher;
 
     /**
-     *
-     * @var User
-     */
-    private $user;
-
-    /**
      * 
      * @param mysqli $connection
      * @param PasswordHasher $passwordHasher
@@ -30,7 +24,6 @@ class UserController {
     function __construct($connection, $passwordHasher) {
         $this->connection = $connection;
         $this->passwordHasher = $passwordHasher;
-        $this->user = new User();
     }
 
     public function registerAction() {
@@ -66,9 +59,10 @@ class UserController {
             return;
         }
 
-        $this->passwordHasher->setPassword($password, $this->user);
+        $user = new User();
+        $this->passwordHasher->setPassword($password, $user);
 
-        if (!$this->registerUser($userName)) {
+        if (!$this->registerUser($userName, $user)) {
             $error = "Klaida, užsiregistruoti nepavyko";
             include("views/error.php");
             return;
@@ -91,12 +85,13 @@ class UserController {
     /**
      * 
      * @param string $userName
+     * @param User $user
      * @return boolean
      */
-    private function registerUser($userName) {
-        $hashedPassword = $this->user->getHashedPassword();
-        $salt = $this->user->getSalt();
-        $hashTimes = $this->user->getHashTimes();
+    private function registerUser($userName, $user) {
+        $hashedPassword = $user->getHashedPassword();
+        $salt = $user->getSalt();
+        $hashTimes = $user->getHashTimes();
 
         $sqlQuerry = "INSERT INTO users (userName, password, salt, hashTimes ) VALUES ('$userName', '$hashedPassword', '$salt', '$hashTimes')";
         return $this->connection->query($sqlQuerry) === TRUE;
