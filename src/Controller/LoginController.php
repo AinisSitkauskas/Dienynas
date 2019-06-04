@@ -35,9 +35,7 @@ class LoginController {
         $userName = $_POST['userName'];
         $password = $_POST['password'];
 
-        $user = new User();
-        
-        if (!$this->getUser($userName, $user)) {
+        if (!$user = $this->getUser($userName)) {
             $error = "Klaida, prisijungti nepavyko! ";
             include("views/error.php");
             return;
@@ -65,18 +63,18 @@ class LoginController {
     /**
      * 
      * @param string $userName
-     * @param User $user
      * @return User OR null
      */
-    private function getUser($userName, $user) {
+    private function getUser($userName) {
         $sqlQuery = "SELECT password, salt, hashTimes FROM users WHERE userName='$userName'";
         $result = $this->connection->query($sqlQuery);
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
+            $user = new User();
             $user->setHashedPassword($row['password'])
                     ->setSalt($row['salt'])
                     ->setHashTimes($row['hashTimes']);
-            return TRUE;
+            return $user;
         } else {
             return FALSE;
         }
