@@ -38,9 +38,13 @@ class LoginController {
     }
 
     private function userExist($userName, $password) {
-        $sqlQuery = "SELECT * FROM users WHERE userName='$userName' AND password='$password'";
-        $result = $this->connection->query($sqlQuery);
-        return $result->num_rows > 0;
+        $sqlQuery = $this->connection->prepare("SELECT * FROM users WHERE userName=:userName AND password=:password");
+        $sqlQuery->bindParam(':userName', $userName);
+        $sqlQuery->bindParam(':password', $password);
+        $sqlQuery->execute();
+        $sqlQuery->setFetchMode(PDO::FETCH_ASSOC);
+        $result = $sqlQuery->fetchColumn();
+        return $result > 0;
     }
 
 }
