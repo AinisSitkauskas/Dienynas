@@ -4,8 +4,20 @@ class UserController {
 
     private $connection;
 
-    function __construct($connection) {
+    /**
+     *
+     * @var PasswordHasher
+     */
+    private $passwordHasher;
+
+    /**
+     * 
+     * @param mysqli $connection
+     * @param PasswordHasher $passwordHasher
+     */
+    function __construct($connection, $passwordHasher) {
         $this->connection = $connection;
+        $this->passwordHasher = $passwordHasher;
     }
 
     public function registerAction() {
@@ -41,7 +53,10 @@ class UserController {
             return;
         }
 
-        if (!$this->registerUser($userName, $password)) {
+        $user = new User();
+        $this->passwordHasher->setPassword($password, $user);
+
+        if (!$this->registerUser($userName, $user)) {
             $error = "Klaida, užsiregistruoti nepavyko";
             include("views/error.php");
             return;
@@ -50,6 +65,11 @@ class UserController {
         include("views/succsesfulRegistration.php");
     }
 
+    /**
+     * 
+     * @param string $userName
+     * @return boolean
+     */
     private function userExist($userName) {
         $sqlQuery = $this->connection->prepare("SELECT * FROM users WHERE userName=:userName");
         $sqlQuery->bindParam(':userName', $userName);
@@ -59,10 +79,23 @@ class UserController {
         return $result > 0;
     }
 
-    private function registerUser($userName, $password) {
-        $sqlQuery = $this->connection->prepare($sqlQuerry = "INSERT INTO users (userName, password) VALUES (:userName, :password)");
+    /**
+     * 
+     * @param string $userName
+     * @param User $user
+     * @return boolean
+     */
+    private function registerUser($userName, $user) {
+        $hashedPassword = $user->getHashedPassword();
+        $salt = $user->getSalt();
+        $hashTimes = $user->getHashTimes();
+
+
+        $sqlQuery = $this->connection->prepare($sqlQuerry = "INSERT INTO users (userName, password, salt, hashTimes) VALUES (:userName, :password, :salt, :hashTimes)");
         $sqlQuery->bindParam(':userName', $userName);
-        $sqlQuery->bindParam(':password', $password);
+        $sqlQuery->bindParam(':password', $hashedPassword);
+        $sqlQuery->bindParam(':salt', $salt);
+        $sqlQuery->bindParam(':hashTimes', $hashTimes);
         return $sqlQuery->execute() === TRUE;
     }
 
@@ -90,6 +123,11 @@ class UserController {
         include("views/userDeleted.php");
     }
 
+    /**
+     * 
+     * @param string $userName
+     * @return boolean
+     */
     private function deleteUser($userName) {
         $sqlQuery = $this->connection->prepare($sqlQuerry = "DELETE FROM users WHERE userName = :userName");
         $sqlQuery->bindParam(':userName', $userName);

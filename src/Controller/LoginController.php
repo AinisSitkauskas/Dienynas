@@ -4,8 +4,20 @@ class LoginController {
 
     private $connection;
 
-    function __construct($connection) {
+    /**
+     *
+     * @var PasswordHasher
+     */
+    private $passwordHasher;
+
+    /**
+     * 
+     * @param mysqli $connection
+     * @param PasswordHasher $passwordHasher
+     */
+    function __construct($connection, $passwordHasher) {
         $this->connection = $connection;
+        $this->passwordHasher = $passwordHasher;
     }
 
     public function loginAction() {
@@ -18,8 +30,16 @@ class LoginController {
         $userName = $_POST['userName'];
         $password = $_POST['password'];
 
-        if (!$this->userExist($userName, $password)) {
+        $user = $this->getUser($userName);
+
+        if (!$user) {
             $error = "Klaida, prisijungti nepavyko! ";
+            include("views/error.php");
+            return;
+        }
+
+        if (!$this->passwordHasher->passwordsEqual($password, $user)) {
+            $error = "Prisijungti nepavyko, jūsų slaptažodis neteisingas! ";
             include("views/error.php");
             return;
         }
@@ -37,14 +57,22 @@ class LoginController {
         }
     }
 
-    private function userExist($userName, $password) {
-        $sqlQuery = $this->connection->prepare("SELECT * FROM users WHERE userName=:userName AND password=:password");
+    private function getUser($userName) {
+        $sqlQuery = $this->connection->prepare("SELECT password, salt, hashTimes FROM users WHERE userName=:userName");
         $sqlQuery->bindParam(':userName', $userName);
-        $sqlQuery->bindParam(':password', $password);
         $sqlQuery->execute();
         $sqlQuery->setFetchMode(PDO::FETCH_ASSOC);
-        $result = $sqlQuery->fetchColumn();
-        return $result > 0;
+        $row = $sqlQuery->fetch();
+
+        if (!$row) {
+            return NULL;
+        }
+
+        $user = new User();
+        $user->setHashedPassword($row['password'])
+                ->setSalt($row['salt'])
+                ->setHashTimes($row['hashTimes']);
+        return $user;
     }
 
 }
