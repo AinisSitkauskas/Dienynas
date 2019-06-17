@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 15, 2019 at 09:50 PM
+-- Generation Time: May 01, 2019 at 10:13 PM
 -- Server version: 10.1.32-MariaDB
 -- PHP Version: 5.6.36
 
@@ -31,15 +31,17 @@ SET time_zone = "+00:00";
 CREATE TABLE `users` (
   `id` int(255) NOT NULL,
   `userName` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `password` varchar(255) COLLATE utf8_unicode_ci NOT NULL
+  `password` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `salt` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `hashTimes` int(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `userName`, `password`) VALUES
-(1, 'admin', 'RaNdOm');
+INSERT INTO `users` (`id`, `userName`, `password`, `salt`, `hashTimes`) VALUES
+(1, 'admin', '9741e8963ada52c431d3263f8db2a8cd1d288033', 'kWViGdVNkvH5Dfmoqqur3vcq', 355232);
 
 --
 -- Indexes for dumped tables

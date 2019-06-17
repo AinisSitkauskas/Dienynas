@@ -1,6 +1,10 @@
 <?php
+
 include("parameters.php");
-$connection = new mysqli($serverName, $userName, $password, $dbName);
-if ($connection->connect_error) {
-    die("Prisijungti nepavyko: " . $conn->connect_error);
+
+try {
+    $connection = new PDO("mysql:host=$serverName;dbname=$dbName", $userName, $password);
+    $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $error) {
+    echo "Connection failed: " . $error->getMessage();
 }

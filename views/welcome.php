@@ -14,7 +14,7 @@
         </style>
     </head>
     <body>
-        <h1> Sveikas, sugrįžęs <?=$_COOKIE['login'] ?>.</h1>
+        <h1> Sveikas, sugrįžęs <?=$_SESSION['userName'] ?>.</h1>
         <form  method = "post" action="index.php?controller=user&action=register" >
             Registruoti naują vartotoją:
             <br>
