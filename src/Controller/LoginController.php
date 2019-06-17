@@ -32,17 +32,24 @@ class LoginController {
 
         $user = $this->getUser($userName);
 
-        if (!$user) {
+        try {
+            if (!$user) {
+                throw new CustomException;
+            }
+        } catch (CustomException $exception) {
             $error = "Klaida, prisijungti nepavyko! ";
-            include("views/error.php");
-            return;
+            $exception->errorMessage($error);
         }
 
-        if (!$this->passwordHasher->passwordsEqual($password, $user)) {
+        try {
+            if (!$this->passwordHasher->passwordsEqual($password, $user)) {
+                throw new CustomException;
+            }
+        } catch (CustomException $exception) {
             $error = "Prisijungti nepavyko, jūsų slaptažodis neteisingas! ";
-            include("views/error.php");
-            return;
+            $exception->errorMessage($error);
         }
+
 
         $_SESSION['userName'] = $userName;
         $_GET['controller'] = "welcome";
@@ -51,6 +58,7 @@ class LoginController {
     }
 
     public function logoutAction() {
+
         if (isset($_POST['logout'])) {
             session_unset();
             header("Location: index.php");

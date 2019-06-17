@@ -35,32 +35,46 @@ class UserController {
         $userName = $_POST['userName'];
         $password = $_POST['password'];
 
-        if ($this->userExist($userName)) {
+        try {
+            if ($this->userExist($userName)) {
+                throw new CustomException;
+            }
+        } catch (CustomException $exception) {
             $error = "Užsiregistruoti nepavyko, toks vartotojo vardas jau egzistuoja";
-            include("views/error.php");
-            return;
+            $exception->errorMessage($error);
         }
 
-        if (strlen($userName) < 4) {
+        try {
+            if (strlen($userName) < 4) {
+                throw new CustomException;
+            }
+        } catch (CustomException $exception) {
             $error = "Užsiregistruoti nepavyko, vartotojo vardas per trumpas";
-            include("views/error.php");
-            return;
+            $exception->errorMessage($error);
         }
 
-        if (strlen($password) < 4) {
+        try {
+            if (strlen($password) < 4) {
+                throw new CustomException;
+            }
+        } catch (CustomException $exception) {
             $error = "Užsiregistruoti nepavyko, slaptažodis per trumpas";
-            include("views/error.php");
-            return;
+            $exception->errorMessage($error);
         }
+
 
         $user = new User();
         $this->passwordHasher->setPassword($password, $user);
 
-        if (!$this->registerUser($userName, $user)) {
+        try {
+            if (!$this->registerUser($userName, $user)) {
+                throw new CustomException;
+            }
+        } catch (CustomException $exception) {
             $error = "Klaida, užsiregistruoti nepavyko";
-            include("views/error.php");
-            return;
+            $exception->errorMessage($error);
         }
+
 
         include("views/succsesfulRegistration.php");
     }
@@ -108,17 +122,24 @@ class UserController {
 
         $userName = $_SESSION['userName'];
 
-        if ($userName == "admin") {
+        try {
+            if ($userName == "admin") {
+                throw new CustomException;
+            }
+        } catch (CustomException $exception) {
             $error = "Administratoriaus ištrinti negalima";
-            include("views/error.php");
-            return;
+            $exception->errorMessage($error);
         }
 
-        if (!$this->deleteUser($userName)) {
+        try {
+            if (!$this->deleteUser($userName)) {
+                throw new CustomException;
+            }
+        } catch (CustomException $exception) {
             $error = "Klaida, ištrinti vartotojo nepavyko";
-            include("views/error.php");
-            return;
+            $exception->errorMessage($error);
         }
+
         session_unset();
         include("views/userDeleted.php");
     }
