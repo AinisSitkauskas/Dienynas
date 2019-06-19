@@ -12,7 +12,8 @@ include_once("src/PasswordHasher/Md5Hasher.php");
 include_once("src/PasswordHasher/Sha1Hasher.php");
 include_once("src/PasswordHasher.php");
 include_once("src/Entity/User.php");
-include_once("src/Exception/CustomException.php");
+include_once("src/Exception/PrivateException.php");
+include_once("src/Exception/PublicException.php");
 
 $passwordHasher = new Sha1Hasher();
 
