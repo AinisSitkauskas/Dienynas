@@ -35,59 +35,26 @@ class UserController {
         $userName = $_POST['userName'];
         $password = $_POST['password'];
 
-        try {
-            if ($this->userExist($userName)) {
-                throw new PublicException;
-            }
-        } catch (PublicException $exception) {
-            $errorMessage = "Užsiregistruoti nepavyko, toks vartotojo vardas jau egzistuoja";
-            $error = $exception->errorMessage($errorMessage);
-            include("views/error.php");
-            exit();
+
+        if ($this->userExist($userName)) {
+
+            throw new PublicException("Užsiregistruoti nepavyko, toks vartotojo vardas jau egzistuoja");
         }
 
-        try {
-            if (strlen($userName) < 4) {
-                throw new PublicException;
-            }
-        } catch (PublicException $exception) {
-            $errorMessage = "Užsiregistruoti nepavyko, vartotojo vardas per trumpas";
-            $error = $exception->errorMessage($errorMessage);
-            include("views/error.php");
-            exit();
+        if (strlen($userName) < 4) {
+            throw new PublicException("Užsiregistruoti nepavyko, vartotojo vardas per trumpas");
         }
 
-        try {
-            if (strlen($password) < 4) {
-                throw new PublicException;
-            }
-        } catch (PublicException $exception) {
-            $errorMessage = "Užsiregistruoti nepavyko, slaptažodis per trumpas";
-            $error = $exception->errorMessage($errorMessage);
-            include("views/error.php");
-            exit();
+        if (strlen($password) < 4) {
+            throw new PublicException("Užsiregistruoti nepavyko, slaptažodis per trumpas");
         }
-
 
         $user = new User();
         $this->passwordHasher->setPassword($password, $user);
 
-        try {
-            try {
-                if (!$this->registerUser($userName, $user)) {
-                    throw new PublicException;
-                }
-            } catch (PublicException $exception) {
-
-                throw new PrivateException;
-            }
-        } catch (PrivateException $exception) {
-
-            $error = $exception->errorMessage();
-            include("views/error.php");
-            exit();
+        if (!$this->registerUser($userName, $user)) {
+            throw new PrivateException;
         }
-
 
         include("views/succsesfulRegistration.php");
     }
@@ -135,31 +102,12 @@ class UserController {
 
         $userName = $_SESSION['userName'];
 
-        try {
-            if ($userName == "admin") {
-                throw new PublicException;
-            }
-        } catch (PublicException $exception) {
-            $errorMessage = "Administratoriaus ištrinti negalima";
-            $error = $exception->errorMessage($errorMessage);
-            include("views/error.php");
-            exit();
+        if ($userName == "admin") {
+            throw new PublicException("Administratoriaus ištrinti negalima");
         }
 
-        try {
-            try {
-                if (!$this->deleteUser($userName)) {
-                    throw new PublicException;
-                }
-            } catch (PublicException $exception) {
-
-                throw new PrivateException;
-            }
-        } catch (PrivateException $exception) {
-
-            $error = $exception->errorMessage();
-            include("views/error.php");
-            exit();
+        if (!$this->deleteUser($userName)) {
+            throw new PrivateException;
         }
 
         session_unset();

@@ -32,33 +32,14 @@ class LoginController {
 
         $user = $this->getUser($userName);
 
-        try {
-            try {
-                if (!$user) {
-                    throw new PublicException;
-                }
-            } catch (PublicException $exception) {
 
-                throw new PrivateException;
-            }
-        } catch (PrivateException $exception) {
-
-            $error = $exception->errorMessage();
-            include("views/error.php");
-            exit();
+        if (!$user) {
+            throw new PrivateException;
         }
 
-        try {
-            if (!$this->passwordHasher->passwordsEqual($password, $user)) {
-                throw new PublicException;
-            }
-        } catch (PublicException $exception) {
-            $errorMessage = "Prisijungti nepavyko, jūsų slaptažodis neteisingas! ";
-            $error = $exception->errorMessage($errorMessage);
-            include("views/error.php");
-            exit();
+        if (!$this->passwordHasher->passwordsEqual($password, $user)) {
+            throw new PublicException("Prisijungti nepavyko, jūsų slaptažodis neteisingas!");
         }
-
 
         $_SESSION['userName'] = $userName;
         $_GET['controller'] = "welcome";
