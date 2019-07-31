@@ -37,7 +37,6 @@ class UserController {
 
 
         if ($this->userExist($userName)) {
-
             throw new PublicException("Užsiregistruoti nepavyko, toks vartotojo vardas jau egzistuoja");
         }
 
@@ -53,7 +52,8 @@ class UserController {
         $this->passwordHasher->setPassword($password, $user);
 
         if (!$this->registerUser($userName, $user)) {
-            throw new PrivateException;
+            $error = $this->connection->errorInfo(2);
+            throw new PrivateException($error);
         }
 
         include("views/succsesfulRegistration.php");
@@ -107,7 +107,8 @@ class UserController {
         }
 
         if (!$this->deleteUser($userName)) {
-            throw new PrivateException;
+            $error = $this->connection->errorInfo(2);
+            throw new PrivateException($error);
         }
 
         session_unset();

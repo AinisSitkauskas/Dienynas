@@ -4,18 +4,19 @@ define("SESSION_LIFETIME", "2678400");
 session_set_cookie_params(SESSION_LIFETIME, "/");
 session_start();
 
+include_once("src/Controller/LoginController.php");
+include_once("src/Controller/WelcomeController.php");
+include_once("src/Controller/UserController.php");
+include_once("src/PasswordHasher/Md5Hasher.php");
+include_once("src/PasswordHasher/Sha1Hasher.php");
+include_once("src/PasswordHasher.php");
+include_once("src/Entity/User.php");
+include_once("src/Exception/PrivateException.php");
+include_once("src/Exception/PublicException.php");
+
 try {
 
     include_once('connection.php');
-    include_once("src/Controller/LoginController.php");
-    include_once("src/Controller/WelcomeController.php");
-    include_once("src/Controller/UserController.php");
-    include_once("src/PasswordHasher/Md5Hasher.php");
-    include_once("src/PasswordHasher/Sha1Hasher.php");
-    include_once("src/PasswordHasher.php");
-    include_once("src/Entity/User.php");
-    include_once("src/Exception/PrivateException.php");
-    include_once("src/Exception/PublicException.php");
 
     $passwordHasher = new Sha1Hasher();
 

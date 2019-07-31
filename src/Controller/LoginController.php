@@ -32,13 +32,12 @@ class LoginController {
 
         $user = $this->getUser($userName);
 
-
         if (!$user) {
-            throw new PrivateException;
+            throw new PublicException("Prisijungti nepavyko, jūsų vartotojo vardas arba slaptažodis neteisingas!");
         }
 
         if (!$this->passwordHasher->passwordsEqual($password, $user)) {
-            throw new PublicException("Prisijungti nepavyko, jūsų slaptažodis neteisingas!");
+            throw new PublicException("Prisijungti nepavyko, jūsų vartotojo vardas arba slaptažodis neteisingas!");
         }
 
         $_SESSION['userName'] = $userName;
