@@ -54,4 +54,8 @@ try {
     // Log real exception
     $error = "Įvyko klaida";
     include("views/error.php");
-}
+} catch (PDOException $exception) {
+    // Log real exception
+    $error = "Įvyko klaida";
+    include("views/error.php");
+} 
