@@ -4,6 +4,10 @@ define("SESSION_LIFETIME", "2678400");
 session_set_cookie_params(SESSION_LIFETIME, "/");
 session_start();
 
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+
+include_once("vendor/autoload.php");
 include_once("src/Controller/LoginController.php");
 include_once("src/Controller/WelcomeController.php");
 include_once("src/Controller/UserController.php");
@@ -17,6 +21,9 @@ include_once("src/Exception/PublicException.php");
 try {
 
     include_once('connection.php');
+
+    $log = new Logger('name');
+    $log->pushHandler(new StreamHandler('log.txt', Logger::WARNING));
 
     $passwordHasher = new Sha1Hasher();
 
@@ -51,11 +58,11 @@ try {
     $error = $exception->getMessage();
     include("views/error.php");
 } catch (PrivateException $exception) {
-    // Log real exception
+    $log->error($exception);
     $error = "Įvyko klaida";
     include("views/error.php");
-} catch (PDOException $exception) {
-    // Log real exception
+} catch (\PDOException $exception) {
+    $log->error($exception);
     $error = "Įvyko klaida";
     include("views/error.php");
 } 
