@@ -20,10 +20,10 @@ include_once("src/Exception/PublicException.php");
 
 try {
 
-    include_once('connection.php');
-
     $log = new Logger('name');
     $log->pushHandler(new StreamHandler('log.txt', Logger::WARNING));
+
+    include_once('connection.php');
 
     $passwordHasher = new Sha1Hasher();
 

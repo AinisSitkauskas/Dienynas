@@ -54,7 +54,7 @@ class LoginController {
         }
     }
 
-    private function getUser($userName) {        
+    private function getUser($userName) {
         $sqlQuery = $this->connection->prepare("SELECT password, salt, hashTimes FROM users WHERE userName=:userName");
         $sqlQuery->bindParam(':userName', $userName);
         $sqlQuery->execute();
