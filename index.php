@@ -61,7 +61,7 @@ try {
     $log->error($exception);
     $error = "Įvyko klaida";
     include("views/error.php");
-} catch (\PDOException $exception) {
+} catch (MongoCursorException $exception) {
     $log->error($exception);
     $error = "Įvyko klaida";
     include("views/error.php");

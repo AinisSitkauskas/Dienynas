@@ -51,10 +51,7 @@ class UserController {
         $user = new User();
         $this->passwordHasher->setPassword($password, $user);
 
-        if (!$this->registerUser($userName, $user)) {
-            $error = $this->connection->errorInfo(2);
-            throw new PrivateException($error);
-        }
+        $this->registerUser($userName, $user);
 
         include("views/succsesfulRegistration.php");
     }
@@ -65,12 +62,10 @@ class UserController {
      * @return boolean
      */
     private function userExist($userName) {
-        $sqlQuery = $this->connection->prepare("SELECT * FROM users WHERE userName=:userName");
-        $sqlQuery->bindParam(':userName', $userName);
-        $sqlQuery->execute();
-        $sqlQuery->setFetchMode(PDO::FETCH_ASSOC);
-        $result = $sqlQuery->fetchColumn();
-        return $result > 0;
+        $result = $this->connection->user->findOne(
+                ['userName' => $userName]
+        );
+        return $result;
     }
 
     /**
@@ -84,13 +79,12 @@ class UserController {
         $salt = $user->getSalt();
         $hashTimes = $user->getHashTimes();
 
-
-        $sqlQuery = $this->connection->prepare($sqlQuerry = "INSERT INTO users (userName, password, salt, hashTimes) VALUES (:userName, :password, :salt, :hashTimes)");
-        $sqlQuery->bindParam(':userName', $userName);
-        $sqlQuery->bindParam(':password', $hashedPassword);
-        $sqlQuery->bindParam(':salt', $salt);
-        $sqlQuery->bindParam(':hashTimes', $hashTimes);
-        return $sqlQuery->execute() === TRUE;
+        return $this->connection->user->insertOne(
+                        ["userName" => $userName,
+                            "password" => $hashedPassword,
+                            "salt" => $salt,
+                            "hashTimes" => $hashTimes]
+        );
     }
 
     public function deleteAction() {
@@ -106,10 +100,7 @@ class UserController {
             throw new PublicException("Administratoriaus ištrinti negalima");
         }
 
-        if (!$this->deleteUser($userName)) {
-            $error = $this->connection->errorInfo(2);
-            throw new PrivateException($error);
-        }
+        $this->deleteUser($userName);
 
         session_unset();
         include("views/userDeleted.php");
@@ -121,9 +112,10 @@ class UserController {
      * @return boolean
      */
     private function deleteUser($userName) {
-        $sqlQuery = $this->connection->prepare($sqlQuerry = "DELETE FROM users WHERE userName = :userName");
-        $sqlQuery->bindParam(':userName', $userName);
-        return $sqlQuery->execute() === TRUE;
+
+        return $result = $this->connection->user->deleteOne(
+                ['userName' => $userName]
+        );
     }
 
 }

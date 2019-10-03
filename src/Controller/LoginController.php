@@ -55,20 +55,20 @@ class LoginController {
     }
 
     private function getUser($userName) {
-        $sqlQuery = $this->connection->prepare("SELECT password, salt, hashTimes FROM users WHERE userName=:userName");
-        $sqlQuery->bindParam(':userName', $userName);
-        $sqlQuery->execute();
-        $sqlQuery->setFetchMode(PDO::FETCH_ASSOC);
-        $row = $sqlQuery->fetch();
 
-        if (!$row) {
+
+        $result = $this->connection->user->findOne(
+                ['userName' => $userName]
+        );
+
+        if (!$result) {
             return NULL;
         }
 
         $user = new User();
-        $user->setHashedPassword($row['password'])
-                ->setSalt($row['salt'])
-                ->setHashTimes($row['hashTimes']);
+        $user->setHashedPassword($result['password'])
+                ->setSalt($result['salt'])
+                ->setHashTimes($result['hashTimes']);
         return $user;
     }
 
