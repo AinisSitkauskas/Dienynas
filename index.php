@@ -14,6 +14,9 @@ include_once("src/Controller/UserController.php");
 include_once("src/PasswordHasher/Md5Hasher.php");
 include_once("src/PasswordHasher/Sha1Hasher.php");
 include_once("src/PasswordHasher.php");
+include_once("src/Model/MongoDB.php");
+include_once("src/Model/MysqlDB.php");
+include_once("src/Database.php");
 include_once("src/Entity/User.php");
 include_once("src/Exception/PrivateException.php");
 include_once("src/Exception/PublicException.php");
@@ -23,18 +26,17 @@ try {
     $log = new Logger('name');
     $log->pushHandler(new StreamHandler('log.txt', Logger::WARNING));
 
-    include_once('connection.php');
-
     $passwordHasher = new Sha1Hasher();
+    $database = new MongoDB();
 
     if (empty($_GET['controller']) || $_GET['controller'] == "welcome") {
-        $controller = new WelcomeController($connection);
+        $controller = new WelcomeController();
 
         if (empty($_GET['action']) || $_GET['action'] == "welcome") {
             $controller->welcomeAction();
         }
     } elseif ($_GET['controller'] == "login") {
-        $controller = new LoginController($connection, $passwordHasher);
+        $controller = new LoginController($database, $passwordHasher);
         switch ($_GET['action']) {
             case "login" :
                 $controller->loginAction();
@@ -44,7 +46,7 @@ try {
                 break;
         }
     } elseif ($_GET['controller'] == "user") {
-        $controller = new UserController($connection, $passwordHasher);
+        $controller = new UserController($database, $passwordHasher);
         switch ($_GET['action']) {
             case "register" :
                 $controller->registerAction();

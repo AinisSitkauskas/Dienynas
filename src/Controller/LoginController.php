@@ -2,21 +2,25 @@
 
 class LoginController {
 
-    private $connection;
+    /**
+     *
+     * @var Database 
+     */
+    private $database;
 
     /**
      *
-     * @var PasswordHasher
+     * @var PaswordHasher 
      */
     private $passwordHasher;
 
     /**
      * 
-     * @param mysqli $connection
+     * @param Database $database
      * @param PasswordHasher $passwordHasher
      */
-    function __construct($connection, $passwordHasher) {
-        $this->connection = $connection;
+    function __construct($database, $passwordHasher) {
+        $this->database = $database;
         $this->passwordHasher = $passwordHasher;
     }
 
@@ -30,7 +34,10 @@ class LoginController {
         $userName = $_POST['userName'];
         $password = $_POST['password'];
 
-        $user = $this->getUser($userName);
+        $user = new User;
+        $user->setUserName($userName);
+
+        $user = $this->database->getUser($user);
 
         if (!$user) {
             throw new PublicException("Prisijungti nepavyko, jūsų vartotojo vardas arba slaptažodis neteisingas!");
@@ -52,24 +59,6 @@ class LoginController {
             session_unset();
             header("Location: index.php");
         }
-    }
-
-    private function getUser($userName) {
-
-
-        $result = $this->connection->user->findOne(
-                ['userName' => $userName]
-        );
-
-        if (!$result) {
-            return NULL;
-        }
-
-        $user = new User();
-        $user->setHashedPassword($result['password'])
-                ->setSalt($result['salt'])
-                ->setHashTimes($result['hashTimes']);
-        return $user;
     }
 
 }

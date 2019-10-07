@@ -2,21 +2,25 @@
 
 class UserController {
 
-    private $connection;
+    /**
+     *
+     * @var Database 
+     */
+    private $database;
 
     /**
      *
-     * @var PasswordHasher
+     * @var PaswordHasher 
      */
     private $passwordHasher;
 
     /**
      * 
-     * @param mysqli $connection
+     * @param Database $database
      * @param PasswordHasher $passwordHasher
      */
-    function __construct($connection, $passwordHasher) {
-        $this->connection = $connection;
+    function __construct($database, $passwordHasher) {
+        $this->database = $database;
         $this->passwordHasher = $passwordHasher;
     }
 
@@ -35,8 +39,10 @@ class UserController {
         $userName = $_POST['userName'];
         $password = $_POST['password'];
 
+        $user = new User();
+        $user->setUserName($userName);
 
-        if ($this->userExist($userName)) {
+        if ($this->database->userExist($user)) {
             throw new PublicException("Užsiregistruoti nepavyko, toks vartotojo vardas jau egzistuoja");
         }
 
@@ -48,43 +54,12 @@ class UserController {
             throw new PublicException("Užsiregistruoti nepavyko, slaptažodis per trumpas");
         }
 
-        $user = new User();
+
         $this->passwordHasher->setPassword($password, $user);
 
-        $this->registerUser($userName, $user);
+        $this->database->registerUser($user);
 
         include("views/succsesfulRegistration.php");
-    }
-
-    /**
-     * 
-     * @param string $userName
-     * @return boolean
-     */
-    private function userExist($userName) {
-        $result = $this->connection->user->findOne(
-                ['userName' => $userName]
-        );
-        return $result;
-    }
-
-    /**
-     * 
-     * @param string $userName
-     * @param User $user
-     * @return boolean
-     */
-    private function registerUser($userName, $user) {
-        $hashedPassword = $user->getHashedPassword();
-        $salt = $user->getSalt();
-        $hashTimes = $user->getHashTimes();
-
-        return $this->connection->user->insertOne(
-                        ["userName" => $userName,
-                            "password" => $hashedPassword,
-                            "salt" => $salt,
-                            "hashTimes" => $hashTimes]
-        );
     }
 
     public function deleteAction() {
@@ -96,26 +71,17 @@ class UserController {
 
         $userName = $_SESSION['userName'];
 
+        $user = new User();
+        $user->setUserName($userName);
+
         if ($userName == "admin") {
             throw new PublicException("Administratoriaus ištrinti negalima");
         }
 
-        $this->deleteUser($userName);
+        $this->database->deleteUser($user);
 
         session_unset();
         include("views/userDeleted.php");
-    }
-
-    /**
-     * 
-     * @param string $userName
-     * @return boolean
-     */
-    private function deleteUser($userName) {
-
-        return $result = $this->connection->user->deleteOne(
-                ['userName' => $userName]
-        );
     }
 
 }
