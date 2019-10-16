@@ -20,6 +20,7 @@ include_once("src/Database.php");
 include_once("src/Entity/User.php");
 include_once("src/Exception/PrivateException.php");
 include_once("src/Exception/PublicException.php");
+include_once("parameters.php");
 
 try {
 
@@ -27,8 +28,8 @@ try {
     $log->pushHandler(new StreamHandler('log.txt', Logger::WARNING));
 
     $passwordHasher = new Sha1Hasher();
-    $database = new MongoDB();
-
+    $database = new MongoDB($serverName,$userName, $password,$dbName);
+    
     if (empty($_GET['controller']) || $_GET['controller'] == "welcome") {
         $controller = new WelcomeController();
 

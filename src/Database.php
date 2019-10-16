@@ -2,14 +2,12 @@
 
 interface Database {
 
-    function __construct();
-
      /**
      * 
-     * @param User $user
+     * @param string $userName
      * @return User
      */
-    public function getUser($user);
+    public function getUser($userName);
 
     /**
      * 

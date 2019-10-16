@@ -10,7 +10,7 @@ class LoginController {
 
     /**
      *
-     * @var PaswordHasher 
+     * @var PasswordHasher 
      */
     private $passwordHasher;
 
@@ -34,10 +34,7 @@ class LoginController {
         $userName = $_POST['userName'];
         $password = $_POST['password'];
 
-        $user = new User;
-        $user->setUserName($userName);
-
-        $user = $this->database->getUser($user);
+        $user = $this->database->getUser($userName);
 
         if (!$user) {
             throw new PublicException("Prisijungti nepavyko, jūsų vartotojo vardas arba slaptažodis neteisingas!");

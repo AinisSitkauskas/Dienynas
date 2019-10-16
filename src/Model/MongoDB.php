@@ -6,19 +6,18 @@ class MongoDB implements Database {
 
     private $connection;
 
-    function __construct() {
-        $mongo = new MongoDB\Client;
-        $this->connection = $mongo->dienynas;
+    function __construct($serverName, $userName, $password, $dbName) {
+        $mongo = new MongoDB\Client("mongodb://${userName}:${password}@${serverName}/${dbName}");
+        $this->connection = $mongo->$dbName;
     }
 
     /**
      * 
-     * @param User $user
+     * @param string $userName
      * @return User
      */
-    public function getUser($user) {
+    public function getUser($userName) {
 
-        $userName = $user->getUserName();
         $result = $this->connection->user->findOne(
                 ['userName' => $userName]
         );
@@ -27,6 +26,7 @@ class MongoDB implements Database {
             return NULL;
         }
 
+        $user = new User;
         $user->setHashedPassword($result['password'])
                 ->setSalt($result['salt'])
                 ->setHashTimes($result['hashTimes']);

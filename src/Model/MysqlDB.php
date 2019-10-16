@@ -6,20 +6,18 @@ class MysqlDB implements Database {
 
     private $connection;
 
-    function __construct() {
-        include_once("parameters.php");
+    function __construct($serverName,$userName, $password,$dbName) {
         $this->connection = new PDO("mysql:host=$serverName;dbname=$dbName", $userName, $password);
         $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
 
     /**
      * 
-     * @param User $user
+     * @param string $userName
      * @return User
      */
-    public function getUser($user) {
+    public function getUser($userName) {
 
-        $userName = $user->getUserName();
         $sqlQuery = $this->connection->prepare("SELECT password, salt, hashTimes FROM users WHERE userName=:userName");
         $sqlQuery->bindParam(':userName', $userName);
         $sqlQuery->execute();
@@ -29,6 +27,7 @@ class MysqlDB implements Database {
             return NULL;
         }
 
+        $user = new User;
         $user->setHashedPassword($row['password'])
                 ->setSalt($row['salt'])
                 ->setHashTimes($row['hashTimes']);
