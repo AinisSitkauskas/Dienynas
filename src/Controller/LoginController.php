@@ -10,7 +10,7 @@ class LoginController {
 
     /**
      *
-     * @var PasswordHasher 
+     * @var PasswordHasher
      */
     private $passwordHasher;
 

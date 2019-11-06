@@ -12,7 +12,7 @@ class MongoDB implements Database {
     }
 
     /**
-     * 
+     *
      * @param string $userName
      * @return User
      */
@@ -34,13 +34,12 @@ class MongoDB implements Database {
     }
 
     /**
-     * 
-     * @param User $user
+     *
+     * @param string $userName
      * @return boolean
      */
-    public function userExist($user) {
+    public function userExist($userName) {
 
-        $userName = $user->getUserName();
         $result = $this->connection->user->findOne(
                 ['userName' => $userName]
         );
@@ -48,11 +47,11 @@ class MongoDB implements Database {
     }
 
     /**
-     * 
+     *
      * @param User $user
      * @return boolean
      */
-    public function registerUser($user) {
+    public function saveUser($user) {
         $userName = $user->getUserName();
         $hashedPassword = $user->getHashedPassword();
         $salt = $user->getSalt();
@@ -67,7 +66,7 @@ class MongoDB implements Database {
     }
 
     /**
-     * 
+     *
      * @param string $user
      * @return boolean
      */

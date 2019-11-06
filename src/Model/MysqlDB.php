@@ -6,13 +6,13 @@ class MysqlDB implements Database {
 
     private $connection;
 
-    function __construct($serverName,$userName, $password,$dbName) {
+    function __construct($serverName, $userName, $password, $dbName) {
         $this->connection = new PDO("mysql:host=$serverName;dbname=$dbName", $userName, $password);
         $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
 
     /**
-     * 
+     *
      * @param string $userName
      * @return User
      */
@@ -35,12 +35,11 @@ class MysqlDB implements Database {
     }
 
     /**
-     * 
-     * @param User $user
+     *
+     * @param string $userName
      * @return boolean
      */
-    public function userExist($user) {
-        $userName = $user->getUserName();
+    public function userExist($userName) {
         $sqlQuery = $this->connection->prepare("SELECT * FROM users WHERE userName=:userName");
         $sqlQuery->bindParam(':userName', $userName);
         $sqlQuery->execute();
@@ -50,12 +49,12 @@ class MysqlDB implements Database {
     }
 
     /**
-     * 
+     *
      * @param string $userName
      * @param User $user
      * @return boolean
      */
-    public function registerUser($user) {
+    public function saveUser($user) {
         $userName = $user->getUserName();
         $hashedPassword = $user->getHashedPassword();
         $salt = $user->getSalt();
@@ -69,7 +68,7 @@ class MysqlDB implements Database {
     }
 
     /**
-     * 
+     *
      * @param User $user
      * @return boolean
      */

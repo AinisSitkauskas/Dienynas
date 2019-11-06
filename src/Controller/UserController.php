@@ -4,18 +4,18 @@ class UserController {
 
     /**
      *
-     * @var Database 
+     * @var Database
      */
     private $database;
 
     /**
      *
-     * @var PaswordHasher 
+     * @var PaswordHasher
      */
     private $passwordHasher;
 
     /**
-     * 
+     *
      * @param Database $database
      * @param PasswordHasher $passwordHasher
      */
@@ -42,7 +42,7 @@ class UserController {
         $user = new User();
         $user->setUserName($userName);
 
-        if ($this->database->userExist($user)) {
+        if ($this->database->userExist($userName)) {
             throw new PublicException("Užsiregistruoti nepavyko, toks vartotojo vardas jau egzistuoja");
         }
 
@@ -57,7 +57,7 @@ class UserController {
 
         $this->passwordHasher->setPassword($password, $user);
 
-        $this->database->registerUser($user);
+        $this->database->saveUser($user);
 
         include("views/succsesfulRegistration.php");
     }
