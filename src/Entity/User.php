@@ -21,6 +21,12 @@ class User {
     private $hashTimes;
 
     /**
+     *
+     * @var string
+     */
+    private $userName;
+
+    /**
      * 
      * @param string $hashedPassword
      * @return $this
@@ -72,6 +78,24 @@ class User {
      */
     public function getHashTimes() {
         return $this->hashTimes;
+    }
+
+    /**
+     * 
+     * @param string $userName
+     * @return $this
+     */
+    public function setUserName($userName) {
+        $this->userName = $userName;
+        return $this;
+    }
+
+    /**
+     * 
+     * @return string
+     */
+    public function getUserName() {
+        return $this->userName;
     }
 
 }

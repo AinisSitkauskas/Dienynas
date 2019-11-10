@@ -2,7 +2,11 @@
 
 class LoginController {
 
-    private $connection;
+    /**
+     *
+     * @var Database 
+     */
+    private $database;
 
     /**
      *
@@ -12,11 +16,11 @@ class LoginController {
 
     /**
      * 
-     * @param mysqli $connection
+     * @param Database $database
      * @param PasswordHasher $passwordHasher
      */
-    function __construct($connection, $passwordHasher) {
-        $this->connection = $connection;
+    function __construct($database, $passwordHasher) {
+        $this->database = $database;
         $this->passwordHasher = $passwordHasher;
     }
 
@@ -30,18 +34,14 @@ class LoginController {
         $userName = $_POST['userName'];
         $password = $_POST['password'];
 
-        $user = $this->getUser($userName);
+        $user = $this->database->getUser($userName);
 
         if (!$user) {
-            $error = "Klaida, prisijungti nepavyko! ";
-            include("views/error.php");
-            return;
+            throw new PublicException("Prisijungti nepavyko, jūsų vartotojo vardas arba slaptažodis neteisingas!");
         }
 
         if (!$this->passwordHasher->passwordsEqual($password, $user)) {
-            $error = "Prisijungti nepavyko, jūsų slaptažodis neteisingas! ";
-            include("views/error.php");
-            return;
+            throw new PublicException("Prisijungti nepavyko, jūsų vartotojo vardas arba slaptažodis neteisingas!");
         }
 
         $_SESSION['userName'] = $userName;
@@ -51,28 +51,11 @@ class LoginController {
     }
 
     public function logoutAction() {
+
         if (isset($_POST['logout'])) {
             session_unset();
             header("Location: index.php");
         }
-    }
-
-    private function getUser($userName) {
-        $sqlQuery = $this->connection->prepare("SELECT password, salt, hashTimes FROM users WHERE userName=:userName");
-        $sqlQuery->bindParam(':userName', $userName);
-        $sqlQuery->execute();
-        $sqlQuery->setFetchMode(PDO::FETCH_ASSOC);
-        $row = $sqlQuery->fetch();
-
-        if (!$row) {
-            return NULL;
-        }
-
-        $user = new User();
-        $user->setHashedPassword($row['password'])
-                ->setSalt($row['salt'])
-                ->setHashTimes($row['hashTimes']);
-        return $user;
     }
 
 }

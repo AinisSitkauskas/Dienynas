@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.0.1
+-- version 4.8.5
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 01, 2019 at 10:13 PM
--- Server version: 10.1.32-MariaDB
--- PHP Version: 5.6.36
+-- Generation Time: 2019 m. Spa 07 d. 18:11
+-- Server version: 10.1.38-MariaDB
+-- PHP Version: 5.6.40
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -19,13 +19,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `users`
+-- Database: `dienynas`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Sukurta duomenų struktūra lentelei `users`
 --
 
 CREATE TABLE `users` (
@@ -37,11 +37,11 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Dumping data for table `users`
+-- Sukurta duomenų kopija lentelei `users`
 --
 
 INSERT INTO `users` (`id`, `userName`, `password`, `salt`, `hashTimes`) VALUES
-(1, 'admin', '9741e8963ada52c431d3263f8db2a8cd1d288033', 'kWViGdVNkvH5Dfmoqqur3vcq', 355232);
+(1, 'admin', '30b9ec0887e67b2d298c9bde4b0bc7bf29b355f3', 'XY6Qrvk6oCdF49I89tjCSoYH', 1218930);
 
 --
 -- Indexes for dumped tables
