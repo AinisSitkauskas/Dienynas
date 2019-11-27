@@ -28,8 +28,7 @@ try {
     $log->pushHandler(new StreamHandler('log.txt', Logger::WARNING));
 
     $passwordHasher = new Sha1Hasher();
-    $database = new MongoDB($serverName, $userName, $password, $dbName);
-
+   $database = new MysqlDB($serverName, $userName, $password, $dbName);
     if (empty($_GET['controller']) || $_GET['controller'] == "welcome") {
         $controller = new WelcomeController();
 
